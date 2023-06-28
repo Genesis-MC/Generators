@@ -11,7 +11,6 @@ class GenesisGearGenerator
     private boolean hasUtil = false;
 
     //TUNGSTEN ITEM UUID
-    private int tung;
     private String[] tungVal = {"mainhand","head","chest","legs","feet"};
 
     public static void main (String[] args) 
@@ -23,7 +22,26 @@ class GenesisGearGenerator
     private void output()
     {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Genesis Custom Gear NBT Generator by Electross\nPlease follow all input instructions closely");
+        System.out.println("Genesis Custom Item NBT Generator by Electross\nPlease follow all input instructions closely");
+        System.out.print("Input what you would like NBT generated for (Item = 1; Gear = 2): ");
+        int choice = scanner.nextInt();
+        if(choice == 1)
+            System.out.print("\n" + outputItem());
+        else
+            System.out.print("\n" + outputGear());
+        scanner.close();
+    }
+
+    //{Name:'{"text":"temp","color":"gray","italic":false}',Lore:['{"text":"Uncommon Ingredient","color":"#3B2B06","italic":false}']}}
+    private String outputItem()
+    {
+        String output = "{Name:'{\"text\":\"";
+        return output;
+    }
+
+    private String outputGear()
+    {
+        Scanner scanner = new Scanner(System.in);
         
         for(int i = 0; i<13; i++)
             stats[i] = 0;
@@ -31,7 +49,7 @@ class GenesisGearGenerator
 
         //INPUT CUSTOM STATS
         System.out.print("Input item slot as an integer (Mainhand = 1; Helmet = 2; Chestplate = 3; Leggings = 4; Boots = 5): ");
-        tung = scanner.nextInt();
+        int tung = scanner.nextInt();
         System.out.print("\nInput gear stats as an integer; If the gear does not have said stat, input 0\nPhysical Power: ");
         stats[0] = scanner.nextInt();
         System.out.print("Magic Power: ");
@@ -118,9 +136,9 @@ class GenesisGearGenerator
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
         output += "]}','{\"text\":\"\"}']},HideFlags:3}";
-        
-        System.out.print("\n" + output);
+          
         scanner.close();
+        return output;
     }
 
     private int getLen(int x)
