@@ -2,16 +2,6 @@ import java.util.Scanner;  // Import the Scanner class
 
 class GenesisGearGenerator
 {
-    //STATS
-    private int[] stats = new int[13];
-    private String[] statVal = {"physical_power","magic_power","attack_speed","health","armor","armor_toughness","knockback_resistance","mana_pool","mana_regen","speed","luck","artifact_power","ability_haste"};
-    private boolean hasPow = false;
-    private boolean hasDef = false;
-    private boolean hasMana = false;
-    private boolean hasUtil = false;
-
-    //TUNGSTEN ITEM UUID
-    private String[] tungVal = {"mainhand","head","chest","legs","feet"};
 
     public static void main (String[] args) 
     {
@@ -23,8 +13,9 @@ class GenesisGearGenerator
     {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Genesis Custom Item NBT Generator by Electross\nPlease follow all input instructions closely");
-        System.out.print("Input what you would like NBT generated for (Item = 1; Gear = 2): ");
+        System.out.print("What would you like NBT generated for? (Item = 1; Gear = 2): ");
         int choice = scanner.nextInt();
+        System.out.println("===================================================================================");
         if(choice == 1)
             System.out.print("\n" + outputItem());
         else
@@ -32,15 +23,82 @@ class GenesisGearGenerator
         scanner.close();
     }
 
-    //{Name:'{"text":"temp","color":"gray","italic":false}',Lore:['{"text":"Uncommon Ingredient","color":"#3B2B06","italic":false}']}}
+    //{display:{Name:'{"text":"temp","color":"gray","italic":false}',Lore:['{"text":"Uncommon Ingredient","color":"#3B2B06","italic":false}']},CustomModelData:982001}
     private String outputItem()
     {
-        String output = "{Name:'{\"text\":\"";
+        Scanner scanner = new Scanner(System.in);
+
+        String name;
+        String color;
+        boolean italic;
+        boolean bold;
+        boolean underlined;
+        String rarity;
+        String itemType = "";
+        String CustomModelData;
+
+        String output = "{display:{Name:'{\"text\":\"";
+
+        //NAME
+        System.out.print("Item Name: ");
+        name = scanner.nextLine();
+        System.out.print("\nColor (Please enter valid color code or Hexcode): ");
+        color = scanner.nextLine();
+        System.out.print("\nItalic (true/false): ");
+        italic = scanner.nextBoolean();
+        System.out.print("\nBold (true/false): ");
+        bold = scanner.nextBoolean();
+        System.out.print("\nUnderlined (true/false): ");
+        underlined = scanner.nextBoolean();
+        output += name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}',Lore:['{\"text\":\"";
+
+        //LORE
+        scanner.nextLine();
+        System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
+        rarity = scanner.nextLine();
+        System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
+        itemType = scanner.nextLine();
+        output += rarity + " " + itemType + "\",\"color\":\"";
+        if(rarity.equals("Common"))
+            output += "white\",\"italic\":false}']}";
+        else if(rarity.equals("Uncommon"))
+            output += "aqua\",\"italic\":false}']}";
+        else if(rarity.equals("Rare"))
+            output += "yellow\",\"italic\":false}']}";
+        else if(rarity.equals("Epic"))
+            output += "light_purple\",\"italic\":false}']}";
+        else if(rarity.equals("Legendary"))
+            output += "#3b2b06\",\"italic\":false}']}";
+        else if(rarity.equals("Mythical"))
+            output += "#211905\",\"italic\":false}']}";
+        else
+            output += "#403303\",\"italic\":false}']}";
+
+        //TEXTURES
+        System.out.print("\nCustom Model Data (If not applicable, input 0; Else input last 3 values: 982---): ");
+        CustomModelData = scanner.nextLine();
+        if(CustomModelData.equals("0")==false)
+            output += ",CustomModelData:982" + CustomModelData;
+        output += "}";
+        
+        scanner.close();
         return output;
     }
 
     private String outputGear()
     {
+        //STATS
+        int[] stats = new int[13];
+        String[] statVal = {"physical_power","magic_power","attack_speed","health","armor","armor_toughness","knockback_resistance","mana_pool","mana_regen","speed","luck","artifact_power","ability_haste"};
+        boolean hasPow = false;
+        boolean hasDef = false;
+        boolean hasMana = false;
+        boolean hasUtil = false;
+
+        //TUNGSTEN ITEM UUID
+        int tung;
+        String[] tungVal = {"mainhand","head","chest","legs","feet"};
+
         Scanner scanner = new Scanner(System.in);
         
         for(int i = 0; i<13; i++)
@@ -49,7 +107,7 @@ class GenesisGearGenerator
 
         //INPUT CUSTOM STATS
         System.out.print("Input item slot as an integer (Mainhand = 1; Helmet = 2; Chestplate = 3; Leggings = 4; Boots = 5): ");
-        int tung = scanner.nextInt();
+        tung = scanner.nextInt();
         System.out.print("\nInput gear stats as an integer; If the gear does not have said stat, input 0\nPhysical Power: ");
         stats[0] = scanner.nextInt();
         System.out.print("Magic Power: ");
