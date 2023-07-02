@@ -2,9 +2,9 @@ import java.util.Scanner;  // Import the Scanner class
 
 class GenesisGearGenerator
 {
-
     public static void main (String[] args) 
     {
+        
         GenesisGearGenerator guh = new GenesisGearGenerator();
         guh.output();
     }
@@ -15,29 +15,25 @@ class GenesisGearGenerator
         System.out.println("Genesis Custom Item NBT Generator by Electross\nPlease follow all input instructions closely");
         System.out.print("What would you like NBT generated for? (Item = 1; Gear = 2): ");
         int choice = scanner.nextInt();
+        scanner.nextLine();
         System.out.println("===================================================================================");
         if(choice == 1)
-            System.out.print("\n" + outputItem());
+            System.out.print("\n{" + outputItem(scanner) + ",HideFlags:3}");
         else
-            System.out.print("\n" + outputGear());
+            System.out.print("\n{" + outputGear(scanner) + ",HideFlags:3}");
         scanner.close();
     }
 
-    //{display:{Name:'{"text":"temp","color":"gray","italic":false}',Lore:['{"text":"Uncommon Ingredient","color":"#3B2B06","italic":false}']},CustomModelData:982001}
-    private String outputItem()
+    private String outputItem(Scanner scanner)
     {
-        Scanner scanner = new Scanner(System.in);
-
         String name;
         String color;
         boolean italic;
         boolean bold;
         boolean underlined;
-        String rarity;
-        String itemType = "";
         String CustomModelData;
 
-        String output = "{display:{Name:'{\"text\":\"";
+        String output = "display:{Name:'{\"text\":\"";
 
         //NAME
         System.out.print("Item Name: ");
@@ -50,42 +46,21 @@ class GenesisGearGenerator
         bold = scanner.nextBoolean();
         System.out.print("\nUnderlined (true/false): ");
         underlined = scanner.nextBoolean();
-        output += name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}',Lore:['{\"text\":\"";
-
-        //LORE
+        output += name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}'";
         scanner.nextLine();
-        System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
-        rarity = scanner.nextLine();
-        System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
-        itemType = scanner.nextLine();
-        output += rarity + " " + itemType + "\",\"color\":\"";
-        if(rarity.equals("Common"))
-            output += "white\",\"italic\":false}']}";
-        else if(rarity.equals("Uncommon"))
-            output += "aqua\",\"italic\":false}']}";
-        else if(rarity.equals("Rare"))
-            output += "yellow\",\"italic\":false}']}";
-        else if(rarity.equals("Epic"))
-            output += "light_purple\",\"italic\":false}']}";
-        else if(rarity.equals("Legendary"))
-            output += "#3b2b06\",\"italic\":false}']}";
-        else if(rarity.equals("Mythical"))
-            output += "#211905\",\"italic\":false}']}";
-        else
-            output += "#403303\",\"italic\":false}']}";
+        output += rarityAndType(scanner) + "}";
 
         //TEXTURES
         System.out.print("\nCustom Model Data (If not applicable, input 0; Else input last 3 values: 982---): ");
         CustomModelData = scanner.nextLine();
         if(CustomModelData.equals("0")==false)
             output += ",CustomModelData:982" + CustomModelData;
-        output += "}";
+        output += addGlint(scanner);
         
-        scanner.close();
         return output;
     }
 
-    private String outputGear()
+    private String outputGear(Scanner scanner)
     {
         //STATS
         int[] stats = new int[13];
@@ -98,12 +73,10 @@ class GenesisGearGenerator
         //TUNGSTEN ITEM UUID
         int tung;
         String[] tungVal = {"mainhand","head","chest","legs","feet"};
-
-        Scanner scanner = new Scanner(System.in);
         
         for(int i = 0; i<13; i++)
             stats[i] = 0;
-        String output = "{gen:{stat:{";
+        String output = "gen:{stat:{";
 
         //INPUT CUSTOM STATS
         System.out.print("Input item slot as an integer (Mainhand = 1; Helmet = 2; Chestplate = 3; Leggings = 4; Boots = 5): ");
@@ -193,10 +166,52 @@ class GenesisGearGenerator
         }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
-        output += "]}','{\"text\":\"\"}']},HideFlags:3}";
+        output += "]}','{\"text\":\"\"}']}" + addGlint(scanner);
           
-        scanner.close();
         return output;
+    }
+
+    private String rarityAndType(Scanner scanner)
+    {
+
+        String rarity;
+        String itemType = "";
+
+        String output = ",Lore:['{\"text\":\"";
+
+        //LORE
+        System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
+        rarity = scanner.nextLine();
+        System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
+        itemType = scanner.nextLine();
+        output += rarity + " " + itemType + "\",\"color\":\"";
+        if(rarity.equals("Common"))
+            output += "white\",\"italic\":false}']";
+        else if(rarity.equals("Uncommon"))
+            output += "aqua\",\"italic\":false}']";
+        else if(rarity.equals("Rare"))
+            output += "yellow\",\"italic\":false}']";
+        else if(rarity.equals("Epic"))
+            output += "light_purple\",\"italic\":false}']";
+        else if(rarity.equals("Legendary"))
+            output += "#3b2b06\",\"italic\":false}']";
+        else if(rarity.equals("Mythical"))
+            output += "#211905\",\"italic\":false}']";
+        else
+            output += "#403303\",\"italic\":false}']";
+
+        return output;
+    }
+
+    private String addGlint(Scanner scanner)
+    {
+        boolean glint;
+        System.out.print("\nAdd enchant glint (true/false): ");
+        glint = scanner.nextBoolean();
+        scanner.nextLine();
+        if(glint)
+            return ",Enchantments:[{}]";
+        return "";
     }
 
     private int getLen(int x)
