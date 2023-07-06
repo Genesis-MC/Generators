@@ -46,9 +46,8 @@ class GenesisGearGenerator
         bold = scanner.nextBoolean();
         System.out.print("\nUnderlined (true/false): ");
         underlined = scanner.nextBoolean();
-        output += name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}'";
-        scanner.nextLine();
-        output += rarityAndType(scanner) + "}";
+        output += name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}',Lore:[";
+        output += rarityAndType(scanner) + "]}";
 
         //TEXTURES
         System.out.print("\nCustom Model Data (If not applicable, input 0; Else input last 3 values: 982---): ");
@@ -140,7 +139,7 @@ class GenesisGearGenerator
             //if weapon
             output += "}},AttributeModifiers:[{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.mainhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\"mainhand\"},{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.offhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\"offhand\"";
         }
-        output += "}],display:{Lore:['{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
+        output += "}],display:{Lore:[" + rarityAndType(scanner) + ",'{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
 
         //FORMATTING CUSTOM GLYPHS AND BORDERS FOR LORE
         for(int i = 0; i<13; i++)
@@ -177,28 +176,29 @@ class GenesisGearGenerator
         String rarity;
         String itemType = "";
 
-        String output = ",Lore:['{\"text\":\"";
-
+        String output = "'{\"text\":\"";
+        scanner.nextLine();
         //LORE
         System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
         rarity = scanner.nextLine();
         System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
         itemType = scanner.nextLine();
         output += rarity + " " + itemType + "\",\"color\":\"";
+
         if(rarity.equals("Common"))
-            output += "white\",\"italic\":false}']";
+            output += "white\",\"italic\":false}'";
         else if(rarity.equals("Uncommon"))
-            output += "aqua\",\"italic\":false}']";
+            output += "aqua\",\"italic\":false}'";
         else if(rarity.equals("Rare"))
-            output += "yellow\",\"italic\":false}']";
+            output += "yellow\",\"italic\":false}'";
         else if(rarity.equals("Epic"))
-            output += "light_purple\",\"italic\":false}']";
+            output += "light_purple\",\"italic\":false}'";
         else if(rarity.equals("Legendary"))
-            output += "#3b2b06\",\"italic\":false}']";
+            output += "#3b2b06\",\"italic\":false}'";
         else if(rarity.equals("Mythical"))
-            output += "#211905\",\"italic\":false}']";
+            output += "#211905\",\"italic\":false}'";
         else
-            output += "#403303\",\"italic\":false}']";
+            output += "#403303\",\"italic\":false}'";
 
         return output;
     }
@@ -219,3 +219,7 @@ class GenesisGearGenerator
         return ("" + x).length();
     }
 }
+/*
+ {gen:{stat:{armor:60,armor_toughness:10,luck:300}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.feet",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,15],Slot:"feet"}]
+ ,display:{Lore:['{"text":"Legendary Boots","color":"#3b2b06","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[60]},{"translate":"genesis.stats.wrapper.armor_toughness.2","with":[10]}]}','{"text":""}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.luck.3","with":[300]}]}','{"text":""}']},Enchantments:[{}],HideFlags:3}
+ */
