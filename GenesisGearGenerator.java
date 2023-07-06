@@ -242,13 +242,3 @@ class GenesisGearGenerator
         return ("" + x).length();
     }
 }
-/*
-HELMET
-{gen:{stat:{armor:25}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.head",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,12],Slot:"head"}],display:{Name:'{"text":"Steel Andure Helmet","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Helmet","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[25]}]}','{"text":""}']},HideFlags:3}
-CHESTPLATE
-{gen:{stat:{armor:65}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.chest",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,13],Slot:"chest"}],display:{Name:'{"text":"Steel Andure Chestplate","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Chestplate","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[65]}]}','{"text":""}']},HideFlags:3}
-LEGGINGS
-{gen:{stat:{armor:55}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.legs",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,14],Slot:"legs"}],display:{Name:'{"text":"Steel Andure Leggings","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Leggings","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[55]}]}','{"text":""}']},HideFlags:3}
-BOOTS
-{gen:{stat:{armor:25}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.feet",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,15],Slot:"feet"}],display:{Name:'{"text":"Steel Andure Boots","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Boots","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[25]}]}','{"text":""}']},HideFlags:3} 
-*/
