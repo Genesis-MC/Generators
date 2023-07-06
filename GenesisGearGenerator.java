@@ -33,7 +33,7 @@ class GenesisGearGenerator
         boolean underlined;
         String CustomModelData;
 
-        String output = "display:{Name:'{\"text\":\"";
+        String output = "display:{";
 
         //NAME
         System.out.print("Item Name: ");
@@ -46,7 +46,7 @@ class GenesisGearGenerator
         bold = scanner.nextBoolean();
         System.out.print("\nUnderlined (true/false): ");
         underlined = scanner.nextBoolean();
-        output += name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}',Lore:[";
+        output += itemName(name, color, italic, bold, underlined) + "Lore:[";
         output += rarityAndType(scanner) + "]}";
 
         //TEXTURES
@@ -61,6 +61,13 @@ class GenesisGearGenerator
 
     private String outputGear(Scanner scanner)
     {
+        //NAME
+        String name;
+        String color;
+        boolean italic;
+        boolean bold;
+        boolean underlined;
+
         //STATS
         int[] stats = new int[13];
         String[] statVal = {"physical_power","magic_power","attack_speed","health","armor","armor_toughness","knockback_resistance","mana_pool","mana_regen","speed","luck","artifact_power","ability_haste"};
@@ -76,6 +83,17 @@ class GenesisGearGenerator
         for(int i = 0; i<13; i++)
             stats[i] = 0;
         String output = "gen:{stat:{";
+        //INPUT ITEM NAME REQ
+        System.out.print("Item Name: ");
+        name = scanner.nextLine();
+        System.out.print("\nColor (Please enter valid color code or Hexcode): ");
+        color = scanner.nextLine();
+        System.out.print("\nItalic (true/false): ");
+        italic = scanner.nextBoolean();
+        System.out.print("\nBold (true/false): ");
+        bold = scanner.nextBoolean();
+        System.out.print("\nUnderlined (true/false): ");
+        underlined = scanner.nextBoolean();
 
         //INPUT CUSTOM STATS
         System.out.print("Input item slot as an integer (Mainhand = 1; Helmet = 2; Chestplate = 3; Leggings = 4; Boots = 5): ");
@@ -139,7 +157,7 @@ class GenesisGearGenerator
             //if weapon
             output += "}},AttributeModifiers:[{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.mainhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\"mainhand\"},{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.offhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\"offhand\"";
         }
-        output += "}],display:{Lore:[" + rarityAndType(scanner) + ",'{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
+        output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner) + ",'{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
 
         //FORMATTING CUSTOM GLYPHS AND BORDERS FOR LORE
         for(int i = 0; i<13; i++)
@@ -203,6 +221,11 @@ class GenesisGearGenerator
         return output;
     }
 
+    private String itemName(String name, String color, boolean italic, boolean bold, boolean underlined)
+    {
+        return "Name:'{\"text\":\"" + name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}',";
+    }
+
     private String addGlint(Scanner scanner)
     {
         boolean glint;
@@ -220,6 +243,12 @@ class GenesisGearGenerator
     }
 }
 /*
- {gen:{stat:{armor:60,armor_toughness:10,luck:300}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.feet",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,15],Slot:"feet"}]
- ,display:{Lore:['{"text":"Legendary Boots","color":"#3b2b06","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[60]},{"translate":"genesis.stats.wrapper.armor_toughness.2","with":[10]}]}','{"text":""}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.luck.3","with":[300]}]}','{"text":""}']},Enchantments:[{}],HideFlags:3}
- */
+HELMET
+{gen:{stat:{armor:25}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.head",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,12],Slot:"head"}],display:{Name:'{"text":"Steel Andure Helmet","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Helmet","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[25]}]}','{"text":""}']},HideFlags:3}
+CHESTPLATE
+{gen:{stat:{armor:65}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.chest",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,13],Slot:"chest"}],display:{Name:'{"text":"Steel Andure Chestplate","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Chestplate","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[65]}]}','{"text":""}']},HideFlags:3}
+LEGGINGS
+{gen:{stat:{armor:55}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.legs",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,14],Slot:"legs"}],display:{Name:'{"text":"Steel Andure Leggings","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Leggings","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[55]}]}','{"text":""}']},HideFlags:3}
+BOOTS
+{gen:{stat:{armor:25}},AttributeModifiers:[{AttributeName:"minecraft:generic.luck",Name:"tungsten.feet",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,15],Slot:"feet"}],display:{Name:'{"text":"Steel Andure Boots","color":"white","italic":false,"bold":false,"underlined":false}',Lore:['{"text":"Uncommon Boots","color":"aqua","italic":false}','{"text":"","font":"genesis:stats","color":"white","italic":false,"extra":[{"translate":"genesis.stats.wrapper.armor.2","with":[25]}]}','{"text":""}']},HideFlags:3} 
+*/
