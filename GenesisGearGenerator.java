@@ -148,42 +148,42 @@ class GenesisGearGenerator
         if(tung > 1)
         {
             //if armor
-            output += "}},AttributeModifiers:[{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten." + tungVal[tung-1] + "\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,";
+            output += "}},AttributeModifiers:[{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten." + tungVal[tung-1] + "\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,";
             output += 10 + tung + "],Slot:";
-            output += "\"" + tungVal[tung-1] + "\"";
+            output += "\\\"" + tungVal[tung-1] + "\\\"";
         }
         else
         {
             //if weapon
-            output += "}},AttributeModifiers:[{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.mainhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\"mainhand\"},{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.offhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\"offhand\"";
+            output += "}},AttributeModifiers:[{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.mainhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\\\"mainhand\\\"},{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.offhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\\\"offhand\\\"";
         }
-        output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner) + ",'{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
+        output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner) + ",'{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
 
         //FORMATTING CUSTOM GLYPHS AND BORDERS FOR LORE
         for(int i = 0; i<13; i++)
         {
             if(stats[i] > 0)
-                output += "{\"translate\":\"genesis.stats.wrapper." + statVal[i] + "." + getLen(stats[i]) + "\",\"with\":[" + stats[i] + "]},";
+                output += "{\\\"translate\\\":\\\"genesis.stats.wrapper." + statVal[i] + "." + getLen(stats[i]) + "\\\",\\\"with\\\":[" + stats[i] + "]},";
 
             if(i == 2 && hasPow && (hasDef || hasMana || hasUtil) )
             {
                 output = output.substring(0,output.length()-1);
-                output += "]}','{\"text\":\"\"}','{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
+                output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
             }
             else if(i == 6 && hasDef && (hasMana || hasUtil))
             {
                 output = output.substring(0,output.length()-1);
-                output += "]}','{\"text\":\"\"}','{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
+                output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
             }
             else if(i == 8 && hasMana && hasUtil)
             {
                 output = output.substring(0,output.length()-1);
-                output += "]}','{\"text\":\"\"}','{\"text\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[";
+                output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
             }
         }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
-        output += "]}','{\"text\":\"\"}']}" + addGlint(scanner);
+        output += "]}','{\\\"text\\\":\\\"\\\"}']}" + addGlint(scanner);
           
         return output;
     }
@@ -194,36 +194,36 @@ class GenesisGearGenerator
         String rarity;
         String itemType = "";
 
-        String output = "'{\"text\":\"";
+        String output = "'{\\\"text\\\":\\\"";
         scanner.nextLine();
         //LORE
         System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
         rarity = scanner.nextLine();
         System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
         itemType = scanner.nextLine();
-        output += rarity + " " + itemType + "\",\"color\":\"";
+        output += rarity + " " + itemType + "\\\",\\\"color\\\":\\\"";
 
         if(rarity.equals("Common"))
-            output += "white\",\"italic\":false}'";
+            output += "white\\\",\\\"italic\\\":false}'";
         else if(rarity.equals("Uncommon"))
-            output += "aqua\",\"italic\":false}'";
+            output += "aqua\\\",\\\"italic\\\":false}'";
         else if(rarity.equals("Rare"))
-            output += "yellow\",\"italic\":false}'";
+            output += "yellow\\\",\\\"italic\\\":false}'";
         else if(rarity.equals("Epic"))
-            output += "light_purple\",\"italic\":false}'";
+            output += "light_purple\\\",\\\"italic\\\":false}'";
         else if(rarity.equals("Legendary"))
-            output += "#3b2b06\",\"italic\":false}'";
+            output += "#3b2b06\\\",\\\"italic\\\":false}'";
         else if(rarity.equals("Mythical"))
-            output += "#211905\",\"italic\":false}'";
+            output += "#211905\\\",\\\"italic\\\":false}'";
         else
-            output += "#403303\",\"italic\":false}'";
+            output += "#403303\\\",\\\"italic\\\":false}'";
 
         return output;
     }
 
     private String itemName(String name, String color, boolean italic, boolean bold, boolean underlined)
     {
-        return "Name:'{\"text\":\"" + name + "\",\"color\":\"" + color + "\",\"italic\":" + italic + ",\"bold\":" + bold + ",\"underlined\":" + underlined + "}',";
+        return "Name:'{\\\"text\\\":\\\"" + name + "\\\",\\\"color\\\":\\\"" + color + "\\\",\\\"italic\\\":" + italic + ",\\\"bold\\\":" + bold + ",\\\"underlined\\\":" + underlined + "}',";
     }
 
     private String addGlint(Scanner scanner)
