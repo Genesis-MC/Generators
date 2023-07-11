@@ -18,9 +18,9 @@ class GenesisGearGenerator
         scanner.nextLine();
         System.out.println("===================================================================================");
         if(choice == 1)
-            System.out.print("\n{" + outputItem(scanner) + ",HideFlags:3}");
+            System.out.print("\n{" + outputItem(scanner) + ",HideFlags:131}");
         else
-            System.out.print("\n{" + outputGear(scanner) + ",HideFlags:3}");
+            System.out.print("\n{" + outputGear(scanner) + ",HideFlags:131}");
         scanner.close();
     }
 
