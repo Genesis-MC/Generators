@@ -2,7 +2,6 @@
 #include <string>
 #include "string_utils.h"
 #include "generator.h"
-#include <fstream>
 
 int main() {
 	using namespace std;
