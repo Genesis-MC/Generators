@@ -1,3 +1,0 @@
-the mac version is coloress since i am too lazy to figure out the api :(
-
-it "should" work on linux too but also it is coloress
