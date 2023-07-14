@@ -1,37 +1,42 @@
-#include "generator.h"
+#include "headers/generator.h"
+
 void entity::print() {
 	using namespace std;
-	CONSOLE_COLOR_INPUT(1);
+	cnsl::color(ConsoleColorAttributes::Blue_FG);
 	cout << "\nRegistry: " << m_Registry;
-	CONSOLE_COLOR_INPUT(2);
+	cnsl::color(ConsoleColorAttributes::Green_FG);
 	cout << "\nname: " << m_Name;
-	CONSOLE_COLOR_INPUT(3);
+	cnsl::color(ConsoleColorAttributes::Bright_Blue_FG);
 	cout << "\nweight: " << m_Weight;
-	CONSOLE_COLOR_INPUT(4);
+	cnsl::color(ConsoleColorAttributes::Red_FG);
 	cout << "\nspawn_pack_distance" << m_Spawn_pack_distance;
-	CONSOLE_COLOR_INPUT(5);
+	cnsl::color(ConsoleColorAttributes::Magenta_FG);
 	cout << "\nspawn_pack" << m_Spawn_pack;
-	CONSOLE_COLOR_INPUT(6);
+	cnsl::color(ConsoleColorAttributes::Yellow_FG);
 	cout << "\nweight_level_multiplier" << m_Weight_level_multiplier;
-	CONSOLE_COLOR_INPUT(7);
+	cnsl::color(ConsoleColorAttributes::Bright_Black_FG);
 	cout << "\nbase_entity: " << m_Base_entity;
-	CONSOLE_COLOR_INPUT(8);
+	cnsl::color(ConsoleColorAttributes::Light_Gray_FG);
 	cout << "\nentity_data: " << m_Entity_data;
-	CONSOLE_COLOR_INPUT(9);
+	cnsl::color(ConsoleColorAttributes::Cyan_FG);
 	cout << "\nstat_increases" << m_Stat_increases;
-	CONSOLE_COLOR_INPUT(10);
+	cnsl::print_colored_reset("\nrequirements: {", ConsoleColorAttributes::Blue_FG);
+	cnsl::color(ConsoleColorAttributes::Green_FG);
 	cout << "\nlevel" << m_Level;
-	CONSOLE_COLOR_INPUT(11);
+	cnsl::color(ConsoleColorAttributes::Light_Cyan_FG);
 	cout << "\nmoon_phase" << m_Moon_phase;
-	CONSOLE_COLOR_INPUT(12);
+	cnsl::color(ConsoleColorAttributes::Red_FG);
 	cout << "\nbiome: " << m_Biome;
-	CONSOLE_COLOR_INPUT(13);
+	cnsl::color(ConsoleColorAttributes::Cyan_FG);
+	cout << "\ndimension: " << m_Dimension;
+	cnsl::color(ConsoleColorAttributes::Magenta_FG);
 	cout << "\nblock: " << m_Block;
-	CONSOLE_COLOR_INPUT(15);
+	cnsl::reset_color();
+	cnsl::print_colored_reset("\n}", ConsoleColorAttributes::Blue_FG);
 }
 void entity::printCommand() {
 	using namespace std;
-	CONSOLE_COLOR_INPUT(14);
+	cnsl::color(ConsoleColorAttributes::Yellow_FG);
 	std::cout << "\n-----------------------------------------------\n";
 	std::cout << "The Command :\n";
 	std::cout << "data modify storage gen:mobs registry.";
@@ -50,8 +55,8 @@ void entity::printCommand() {
 	if (hasSpawnPack) {
 		Command += ",spawn_pack:";
 		SavedSize = (int)Command.size();
-		if(m_Spawn_pack.min != 0)Command += ",min:" + to_string(m_Spawn_pack.min);
-		if(m_Spawn_pack.max != 0)Command += ",max:" + to_string(m_Spawn_pack.max);
+		if (m_Spawn_pack.min != 0)Command += ",min:" + to_string(m_Spawn_pack.min);
+		if (m_Spawn_pack.max != 0)Command += ",max:" + to_string(m_Spawn_pack.max);
 		if (Command[SavedSize] == ',')
 			Command[SavedSize] = '{';
 		Command += "}";
@@ -71,19 +76,19 @@ void entity::printCommand() {
 			Command += "flat:";
 			SavedSize = (int)Command.size();
 			if (m_Stat_increases.F_health.hasValue())
-				Command += ",health:{n:"+ to_string(m_Stat_increases.F_health.n) + "s,p:"+ to_string(m_Stat_increases.F_health.p) + "b,b:"+ to_string(m_Stat_increases.F_health.b) + "f}";
+				Command += ",health:{n:" + to_string(m_Stat_increases.F_health.n) + "s,p:" + to_string(m_Stat_increases.F_health.p) + "b,b:" + to_string(m_Stat_increases.F_health.b) + "f}";
 			if (m_Stat_increases.F_damage.hasValue())
-				Command += ",damage:{n:"+ to_string(m_Stat_increases.F_damage.n) + "s,p:"+ to_string(m_Stat_increases.F_damage.p) + "b,b:"+ to_string(m_Stat_increases.F_damage.b) + "f}";
+				Command += ",damage:{n:" + to_string(m_Stat_increases.F_damage.n) + "s,p:" + to_string(m_Stat_increases.F_damage.p) + "b,b:" + to_string(m_Stat_increases.F_damage.b) + "f}";
 			if (m_Stat_increases.F_armor.hasValue())
-				Command += ",armor:{n:"+ to_string(m_Stat_increases.F_armor.n) + "s,p:"+ to_string(m_Stat_increases.F_armor.p) + "b,b:"+ to_string(m_Stat_increases.F_armor.b) + "f}";
+				Command += ",armor:{n:" + to_string(m_Stat_increases.F_armor.n) + "s,p:" + to_string(m_Stat_increases.F_armor.p) + "b,b:" + to_string(m_Stat_increases.F_armor.b) + "f}";
 			if (m_Stat_increases.F_armor_toughness.hasValue())
-				Command += ",armor_toughness:{n:"+ to_string(m_Stat_increases.F_armor_toughness.n) + "s,p:"+ to_string(m_Stat_increases.F_armor_toughness.p) + "b,b:"+ to_string(m_Stat_increases.F_armor_toughness.b) + "f}";
+				Command += ",armor_toughness:{n:" + to_string(m_Stat_increases.F_armor_toughness.n) + "s,p:" + to_string(m_Stat_increases.F_armor_toughness.p) + "b,b:" + to_string(m_Stat_increases.F_armor_toughness.b) + "f}";
 			if (m_Stat_increases.F_attack_speed.hasValue())
-				Command += ",attack_speed:{n:"+ to_string(m_Stat_increases.F_attack_speed.n) + "s,p:"+ to_string(m_Stat_increases.F_attack_speed.p) + "b,b:"+ to_string(m_Stat_increases.F_attack_speed.b) + "f}";
+				Command += ",attack_speed:{n:" + to_string(m_Stat_increases.F_attack_speed.n) + "s,p:" + to_string(m_Stat_increases.F_attack_speed.p) + "b,b:" + to_string(m_Stat_increases.F_attack_speed.b) + "f}";
 			if (m_Stat_increases.F_sight_range.hasValue())
-				Command += ",sight_range:{n:"+ to_string(m_Stat_increases.F_sight_range.n) + "s,p:"+ to_string(m_Stat_increases.F_sight_range.p) + "b,b:"+ to_string(m_Stat_increases.F_sight_range.b) + "f}";
+				Command += ",sight_range:{n:" + to_string(m_Stat_increases.F_sight_range.n) + "s,p:" + to_string(m_Stat_increases.F_sight_range.p) + "b,b:" + to_string(m_Stat_increases.F_sight_range.b) + "f}";
 			if (m_Stat_increases.F_speed.hasValue())
-				Command += ",speed:{n:"+ to_string(m_Stat_increases.F_speed.n) + "s,p:"+ to_string(m_Stat_increases.F_speed.p) + "b,b:"+ to_string(m_Stat_increases.F_speed.b) + "f}";
+				Command += ",speed:{n:" + to_string(m_Stat_increases.F_speed.n) + "s,p:" + to_string(m_Stat_increases.F_speed.p) + "b,b:" + to_string(m_Stat_increases.F_speed.b) + "f}";
 			if (Command[SavedSize] == ',')
 				Command[SavedSize] = '{';
 			Command += '}';
@@ -117,15 +122,15 @@ void entity::printCommand() {
 		Command += ",requirements:{";
 		if (hasMoonPhase) {
 			Command += "moon_phase:{";
-			if (m_Moon_phase.min != 0) Command += "min:" + to_string(m_Moon_phase.min) +"b,";
-			if (m_Moon_phase.max != 0) Command += "max:" + to_string(m_Moon_phase.max) +"b,";
+			if (m_Moon_phase.min != 0) Command += "min:" + to_string(m_Moon_phase.min) + "b,";
+			if (m_Moon_phase.max != 0) Command += "max:" + to_string(m_Moon_phase.max) + "b,";
 			if (m_Moon_phase.except != 0) Command += "except:" + to_string(m_Moon_phase.except) + "b,";
 			if (m_Moon_phase.exact != 0) Command += "exact:" + to_string(m_Moon_phase.exact) + "b,";
 			if (m_Moon_phase.on_even_days != 0) Command += "on_even_days:" + to_string(m_Moon_phase.on_even_days) + "b,";
 			if (m_Moon_phase.on_odd_days != 0) Command += "on_odd_days:" + to_string(m_Moon_phase.on_odd_days) + "b,";
 			if (m_Moon_phase.on_prime_days != 0) Command += "on_prime_days:" + to_string(m_Moon_phase.on_prime_days) + "b,";
 			if (m_Moon_phase.blood_moon != 0) Command += "blood_moon:" + to_string(m_Moon_phase.blood_moon) + "b,";
-			Command[Command.size()-1] = '}';
+			Command[Command.size() - 1] = '}';
 		}
 		if (hasLevel) {
 			if (Command[Command.size() - 1] == '}') Command += ',';
@@ -133,6 +138,12 @@ void entity::printCommand() {
 			if (m_Level.min != 0) Command += "min:" + to_string(m_Level.min) + ",";
 			if (m_Level.max != INT_LIMIT) Command += "max:" + to_string(m_Level.max) + ",";
 			Command[Command.size() - 1] = '}';
+		}
+		if (hasDimension) {
+			if (Command[Command.size() - 1] == '}') Command += ',';
+			Command += "dimension:\"" + m_Dimension + "\",";
+			if (m_Dimension[0] == '#')
+				Command += "dimensionTag:1b,";
 		}
 		if (hasBlock) {
 			if (Command[Command.size() - 1] == '}') Command += ',';
@@ -154,64 +165,70 @@ void entity::printCommand() {
 	}
 	std::cout << Command;
 	std::cout << "}";
-	CONSOLE_COLOR_INPUT(15);
+	cnsl::reset_color();
 }
-
-int generator::dialogue(entity& Entity, int key, const std::string& saying){
+int generator::dialogue(entity& Entity, int key, const std::string& saying) {
 	using namespace std;
-	std::cout << '\n' << saying;
+	std::string input;
+	if (saying != "")
+		std::cout << '\n';
+	std::cout << saying;
 	std::cin >> input;
-	string inputLowercase = input;
+	std::string inputLowercase = input;
+	std::string inputUppercase = input;
 	sutils::lowercase(inputLowercase);
-	string inputUppercase = input;
 	sutils::uppercase(inputUppercase);
 	if (key == json::keys::registry) { // ik switch exists it is just that i can't hide it unlike if which is annoying
-		if (!valid_entity(inputLowercase)) {
+		if (inputLowercase == "-- help" || inputLowercase == "--help") {
+			printHelp(Help::Registry);
+			this->dialogue(Entity, key, saying);
+		}
+		else if (!valid_entity(inputLowercase)) {
 			THROW_ERROR("Invalid Entity");
 		}
 		else
 			Entity.m_Registry = inputLowercase;
 	}
 	else if (key == json::keys::name) {
-		Entity.m_Name = input;
-		if (inputLowercase == "dad")
-			Entity.m_Name = nullptr;
-		else if (inputLowercase == "hereafterdestruction")
-			Entity.m_Name = "Hi whats up guys I am EDP445 subscribe to my onlyfans at HereAfterThePoliceRaidedMyHouse and donate me cupcakes and kidneys I also like chil- chilli they are so hot and tasty!!!!!!!";
-		else if (inputLowercase == "puckisilver")
-			Entity.m_Name = "PuckiSilver you so cringe smh sucking at English man has a 'B' Profile Pic while his name has a 'P' learn some english mate boom roasted:sunglasses:!";
-		else if (inputLowercase == "eroxen")
-			Entity.m_Name = "oh oh Eroxen more like ripoff Enard from Wish.com silly goose!";
-		else if (inputLowercase == "electross")
-			Entity.m_Name = "Electross i can't say anything bad about you or i will get banned!";
-		else if (inputLowercase == "flyrr_" || inputLowercase == "flyrr")
-			Entity.m_Name = "whats up guys before starting this video i am going to tell you about my sponser BisectHosting_TM it is so good i am tottally not held at gunpoint!";
-		else if (inputLowercase == "klloo")
-			Entity.m_Name = "oh it is Klloo the clueless!";
-		else if (inputLowercase == "dynia")
-			Entity.m_Name = "can't find something :/!";
-		else if (inputLowercase == "silabear")
-			Entity.m_Name = "I can't BEAR him he is so annoying!!!!!!!!!!!!!!!!!!!!!!!!";
-		else if (inputLowercase == "wuflian")
-			Entity.m_Name = "ripoff moxvallix";
-		else if (inputLowercase == "moxvallix")
-			Entity.m_Name = "ripoff wuflian";
-		else if (inputLowercase == "failure")
-			Entity.m_Name = "HereAfterDestruction";
-		else if (inputLowercase == "chimedragon")
-			Entity.m_Name = "chimeez deez nuts";
-		else if (inputLowercase == "yandev")
-			Entity.m_Name = "HereAfterDestruction is going to become the new yandev with this source code!";
-		else if (inputLowercase == "__foxman__")
-			Entity.m_Name = "time to make a zelda remake! HereAfterDestruction :cry:";
-		else if (inputLowercase == "amongus")
-			Entity.m_Name = "yes i did waste alot of time making these!";
-		else if (inputLowercase == "c++")
-			Entity.m_Name = "positive pain";
-		else if (inputLowercase == "c--")
-			Entity.m_Name = "negative pain?";
-		else if (inputLowercase == "c")
-			Entity.m_Name = "pain?";
+			Entity.m_Name = inputLowercase;
+			if (inputLowercase == "dad")
+				Entity.m_Name = nullptr;
+			else if (inputLowercase == "hereafterdestruction")
+				Entity.m_Name = "Hi whats up guys I am EDP445 subscribe to my onlyfans at HereAfterThePoliceRaidedMyHouse and donate me cupcakes and kidneys I also like chil- chilli they are so hot and tasty!!!!!!!";
+			else if (inputLowercase == "puckisilver")
+				Entity.m_Name = "PuckiSilver you so cringe smh sucking at English man has a 'B' Profile Pic while his name has a 'P' learn some english mate boom roasted:sunglasses:!";
+			else if (inputLowercase == "eroxen")
+				Entity.m_Name = "oh oh Eroxen more like ripoff Enard from Wish.com silly goose!";
+			else if (inputLowercase == "electross")
+				Entity.m_Name = "Electross i can't say anything bad about you or i will get banned!";
+			else if (inputLowercase == "flyrr_" || inputLowercase == "flyrr")
+				Entity.m_Name = "whats up guys before starting this video i am going to tell you about my sponser BisectHosting_TM it is so good I am tottally not held at gunpoint!";
+			else if (inputLowercase == "klloo")
+				Entity.m_Name = "oh it is Klloo the clueless!";
+			else if (inputLowercase == "dynia")
+				Entity.m_Name = "can't find something :/!";
+			else if (inputLowercase == "silabear")
+				Entity.m_Name = "I can't BEAR him he is so annoying!!!!!!!!!!!!!!!!!!!!!!!!";
+			else if (inputLowercase == "wuflian")
+				Entity.m_Name = "ripoff moxvallix";
+			else if (inputLowercase == "moxvallix")
+				Entity.m_Name = "ripoff wuflian";
+			else if (inputLowercase == "failure")
+				Entity.m_Name = "HereAfterDestruction";
+			else if (inputLowercase == "chimedragon")
+				Entity.m_Name = "chimeez deez nuts";
+			else if (inputLowercase == "yandev")
+				Entity.m_Name = "HereAfterDestruction is going to become the new yandev with this source code!";
+			else if (inputLowercase == "__foxman__")
+				Entity.m_Name = "time to make a zelda remake! HereAfterDestruction :cry:";
+			else if (inputLowercase == "amongus")
+				Entity.m_Name = "yes i did waste alot of time making these!";
+			else if (inputLowercase == "c++")
+				Entity.m_Name = "positive pain";
+			else if (inputLowercase == "c--")
+				Entity.m_Name = "negative pain?";
+			else if (inputLowercase == "c")
+				Entity.m_Name = "pain?";
 	}
 	else if (key == json::keys::weight) {
 		if (!sutils::all_number(input) || input[0] == '-') {
@@ -234,6 +251,9 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 		if (input == ".") Entity.m_Weight_level_multiplier = 0.0f;
 		else if (input[0] == '-') {
 			THROW_ERROR("Invalid Input: The input must be a positive number!");
+		}
+		else if (input[0] <= '0' || input[0] >= '9') {
+			THROW_ERROR("Dummy enter a decimal number!");
 		}
 		else if (input.size() > 10) {
 			THROW_ERROR("Invalid Input: The input must not be greater than 2,147,483,647!");
@@ -259,72 +279,82 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 	else if (key == json::keys::stat_increases) {
 		Entity.hasStatIncreases = inputUppercase == "Y";
 		if (Entity.hasStatIncreases) {
-			CONSOLE_COLOR("NOTE: \n( N = INT, P = INT ,B = INT/100)\nExample if i Type 10,30,50 N = 10, P= 30%, Base = 0.5\n",11);
+			cnsl::print_colored_reset("NOTE: \n( N = INT, P = INT ,B = INT/100)\nExample if I Type 10,30,50 N = 10, P= 30%, Base = 0.5\n", ConsoleColorAttributes::Cyan_FG);
 		}
-		if (inputUppercase != "N" && Entity.hasStatIncreases == false) {
+		else if (inputLowercase == "." || inputUppercase == "N" && Entity.hasFlatStatIncreases == false) Entity.hasStatIncreases = false;
+		else {
 			THROW_ERROR("Dummy type Y / N!");
 		}
 	}
 	else if (key == json::keys::flat_stat_increases) {
 		Entity.hasFlatStatIncreases = inputUppercase == "Y";
 		// 1 less string comparison performance stonks
-		if (inputUppercase != "N" && Entity.hasFlatStatIncreases == false) {
+		if (inputLowercase != "." && inputUppercase != "N" && Entity.hasFlatStatIncreases == false) {
 			THROW_ERROR("Dummy type Y / N!");
 		}
 	}
 	else if (key == json::keys::percentage_stat_increases) {
 		Entity.hasPercentageStatIncreases = inputUppercase == "Y";
 		// 1 less string comparison performance stonks
-		if (inputUppercase != "N" && Entity.hasPercentageStatIncreases == false) {
+		if (inputLowercase != "." && inputUppercase != "N" && Entity.hasPercentageStatIncreases == false) {
 			THROW_ERROR("Dummy type Y / N!");
 		}
 	}
 	else if (key == json::keys::requirements) {
 		Entity.hasRequirements = inputUppercase == "Y";
 		// 1 less string comparison performance stonks
-		if (inputUppercase != "N" && Entity.hasRequirements == false) {
+		if (inputUppercase != "N" && inputUppercase != "." && Entity.hasRequirements == false) {
 			THROW_ERROR("Dummy type Y / N!");
 		}
 	}
 	else if (key == json::keys::moon_phase) {
 		Entity.hasMoonPhase = inputUppercase == "Y";
-		if (inputUppercase != "N" && Entity.hasMoonPhase == false && inputUppercase != ".") {
+		if (inputUppercase != "N" && inputUppercase != "." && Entity.hasMoonPhase == false) {
 			THROW_ERROR("Dummy type Y / N!");
 		}
 		else if (Entity.hasMoonPhase == true) {
+
 			bool CanHaveExact = true;
-			cout << "Min (1-9 '.' to skip):";
+			cout << "Min (1-8 '.' to skip):";
 			std::cin >> input;
 			if (input == ".")Entity.m_Moon_phase.min = 0;
-			else if (sutils::convert_to_number(input) > 9 || sutils::convert_to_number(input) < 1) {THROW_ERROR("Dummy enter the range is 1-9 it is litterally there!");}
-			else if (!sutils::all_number(input)) {THROW_ERROR("Dummy enter a fricking number!");}
-			else {Entity.m_Moon_phase.min = sutils::convert_to_number(input);CanHaveExact = false;}
+			else if (sutils::convert_to_number(input) > 8 || sutils::convert_to_number(input) < 1) { THROW_ERROR("Dummy enter the range is 1-8 it is litterally there!"); }
+			else if (!sutils::all_number(input)) { THROW_ERROR("Dummy enter a fricking number!"); }
+			else { Entity.m_Moon_phase.min = sutils::convert_to_number(input); CanHaveExact = false; }
 
 
-			cout << "Max (1-9 '.' to skip):";
+			cout << "Max (1-8 '.' to skip):";
 			std::cin >> input;
-			if (input == ".") {Entity.m_Moon_phase.max = 0;}
-			else if (sutils::convert_to_number(input) > 9 || sutils::convert_to_number(input) < 1) {
-				THROW_ERROR("Dummy enter the range is 1-9 it is litterally there!");
+			if (input == ".") { Entity.m_Moon_phase.max = 0; }
+			else if (sutils::convert_to_number(input) > 8 || sutils::convert_to_number(input) < 1) {
+				THROW_ERROR("Dummy enter the range is 1-8 it is litterally there!");
+			}
+			else if (sutils::convert_to_number(input) <= Entity.m_Moon_phase.min) {
+				THROW_ERROR("Dummy enter the max can't be less than the min or equal to it!!");
 			}
 			else if (sutils::all_number(input)) {
 				Entity.m_Moon_phase.max = sutils::convert_to_number(input);
 				CanHaveExact = false;
 			}
-			else {THROW_ERROR("Dummy enter a fricking number!");}
+			else { THROW_ERROR("Dummy enter a fricking number!"); }
 
 
-			cout << "Except (1-9 '.' to skip):";
+			cout << "Except (1-8 '.' to skip):";
 			std::cin >> input;
 			if (input == ".") Entity.m_Moon_phase.except = 0;
-			else if (sutils::convert_to_number(input) > 9 || sutils::convert_to_number(input) < 1) {THROW_ERROR("Dummy enter the range is 1-9 it is litterally there!");}
+			else if (sutils::convert_to_number(input) > 8 || sutils::convert_to_number(input) < 1) { THROW_ERROR("Dummy enter the range is 1-8 it is litterally there!"); }
+			else if (Entity.m_Moon_phase.min != 0 && Entity.m_Moon_phase.max != 0 && (sutils::convert_to_number(input) < Entity.m_Moon_phase.min || sutils::convert_to_number(input) > Entity.m_Moon_phase.max))
+			{
+					THROW_ERROR("Dummy the exception must be in the range of the min and max!");
+			}
 			else if (sutils::all_number(input)) {
 				Entity.m_Moon_phase.except = sutils::convert_to_number(input);
 				CanHaveExact = false;
-			}else {THROW_ERROR("Dummy enter a fricking number!");}
+			}
+			else { THROW_ERROR("Dummy enter a fricking number!"); }
 
-
-			cout << "On Prime Days (1,3,5,7 '.' to skip 0 / 1):";
+			// me thought 1 was prime :skull: when you skip basic math class
+			cout << "On Prime Days (2,3,5,7 '.' to skip 0 / 1):"; 
 			std::cin >> input;
 			if (input == ".") Entity.m_Moon_phase.on_prime_days = false;
 			else if (sutils::convert_to_number(input) < 0 || sutils::convert_to_number(input) > 1) { THROW_ERROR("Dummy enter it is a boolean value!"); }
@@ -332,7 +362,8 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 				Entity.m_Moon_phase.on_prime_days = (bool)sutils::convert_to_number(input);
 				CanHaveExact = false;
 			}
-			else {THROW_ERROR("Dummy enter a boolean value 0 or 1");}
+			else { THROW_ERROR("Dummy enter a boolean value 0 or 1"); }
+
 			if (!Entity.m_Moon_phase.on_prime_days) {
 				cout << "On Even Days (2,4,6,8 '.' to skip 0 / 1):";
 				std::cin >> input;
@@ -345,9 +376,10 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 				else { THROW_ERROR("Dummy enter a boolean value 0 or 1"); }
 			}
 
-
+			// 0 1 2 3 4 5 6 7
+			//   1 2 3 4 5 6 7 8
 			if (!Entity.m_Moon_phase.on_prime_days && !Entity.m_Moon_phase.on_even_days) {
-				cout << "On Odd Days (2,4,6,8 '.' to skip, 0 / 1):";
+				cout << "On Odd Days (1,3,5,7 '.' to skip, 0 / 1):";
 				std::cin >> input;
 				if (input == ".") Entity.m_Moon_phase.on_odd_days = false;
 				else if (sutils::convert_to_number(input) < 0 || sutils::convert_to_number(input) > 1) { THROW_ERROR("Dummy enter it is a boolean value!"); }
@@ -360,13 +392,18 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 
 
 			if (CanHaveExact) {
-				cout << "Exact (1-9):";
+				cout << "Exact (1-8):";
 				std::cin >> input;
 				if (input == ".") Entity.m_Moon_phase.except = 0;
-				else if (sutils::convert_to_number(input) > 9 || sutils::convert_to_number(input) < 1) { THROW_ERROR("Dummy enter the range is 1-9 it is litterally there!"); }
+				else if (sutils::convert_to_number(input) > 8 || sutils::convert_to_number(input) < 1) { THROW_ERROR("Dummy enter the range is 1-8 it is litterally there!"); }
 				else if (sutils::all_number(input)) Entity.m_Moon_phase.exact = sutils::convert_to_number(input);
 				else { THROW_ERROR("Dummy enter a fricking number!"); }
 			}
+			cout << "Blood Moon (boolean 0 / 1 '.' to skip):";
+			std::cin >> input;
+			if (input == ".") Entity.m_Moon_phase.blood_moon = false;
+			else if (sutils::convert_to_number(input) < 0 || sutils::convert_to_number(input) > 1) { THROW_ERROR("Dummy enter a boolean value true or false (0 / 1)!"); }
+			else Entity.m_Moon_phase.blood_moon = sutils::convert_to_number(input);
 		}
 	}
 	else if (key == json::keys::level) {
@@ -389,8 +426,7 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			std::cin >> input;
 
 			if (input == ".") Entity.m_Level.max = INT_LIMIT;
-			else if (sutils::convert_to_number(input) < -1) { THROW_ERROR("Dummy the number can't be negative!"); }
-			else if (sutils::all_number(input)) Entity.m_Level.max = sutils::convert_to_number(input);
+			else if (sutils::convert_to_number(input) < 0) { THROW_ERROR("Dummy the number can't be negative!"); }			else if (sutils::all_number(input)) Entity.m_Level.max = sutils::convert_to_number(input);
 			else { THROW_ERROR("Dummy enter a fricking number!"); }
 		}
 		else if (inputUppercase != "N" && inputUppercase != "." && Entity.hasRequirements == false) { THROW_ERROR("Dummy enter Y / N!"); }
@@ -400,8 +436,8 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 		if (Entity.hasSpawnPack == true) {
 			std::cout << "Min: ";
 			std::cin >> input;
-			if (sutils::convert_to_number(input) <= 0) {THROW_ERROR("Dummy the number can't be negative or equal to zero!");}
-			else if (!sutils::all_number(input)) {THROW_ERROR("Dummy enter a fricking number!");}
+			if (sutils::convert_to_number(input) <= 0) { THROW_ERROR("Dummy the number can't be negative or equal to zero!"); }
+			else if (!sutils::all_number(input)) { THROW_ERROR("Dummy enter a fricking number!"); }
 			else Entity.m_Spawn_pack.min = sutils::convert_to_number(input);
 
 			std::cout << "Max: ";
@@ -409,6 +445,7 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 
 			if (sutils::convert_to_number(input) <= 0) { THROW_ERROR("Dummy the number can't be negative or equal to zero!"); }
 			else if (!sutils::all_number(input)) { THROW_ERROR("Dummy enter a fricking number!"); }
+			else if (sutils::convert_to_number(input) <= Entity.m_Spawn_pack.min) { THROW_ERROR("Dummy the max can't be less or equal to the min!"); }
 			else Entity.m_Spawn_pack.max = sutils::convert_to_number(input);
 		}
 		else if (inputUppercase != "N" && inputUppercase != "." && Entity.hasSpawnPack == false) { THROW_ERROR("Dummy enter Y / N!"); }
@@ -425,6 +462,7 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			std::cin >> input;
 
 			if (std::stof(input) <= 0) { THROW_ERROR("Dummy the number can't be negative or equal to zero!"); }
+			else if(std::stof(input) <= Entity.m_Spawn_pack_distance.min){ THROW_ERROR("Dummy the max can't be less or equal to the min!"); }
 			else Entity.m_Spawn_pack_distance.max = std::stof(input);
 		}
 		else if (inputUppercase != "N" && inputUppercase != "." && Entity.hasSpawnPackDistance == false) { THROW_ERROR("Dummy enter Y / N!"); }
@@ -433,7 +471,7 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 		if (input == ".") Entity.m_Block = '\0';
 		else if (input[0] == '#')
 		{
-			if (sutils::find_char(inputLowercase, ':')){
+			if (sutils::find_char(inputLowercase, ':')) {
 				Entity.m_Block = inputLowercase;
 				Entity.hasBlock = true;
 			}
@@ -445,7 +483,7 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			}
 		}
 		else {
-			if (!valid_block(inputLowercase)){
+			if (!valid_block(inputLowercase)) {
 				THROW_ERROR("Invalid Block");
 			}
 			if (sutils::find_char(inputLowercase, ':')) {
@@ -469,7 +507,7 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			else {
 				Entity.hasBiome = true;
 				Entity.m_Biome += "#minecraft:";
-				for(int i = 1; i < inputLowercase.size();++i)
+				for (int i = 1; i < inputLowercase.size(); ++i)
 					Entity.m_Biome += inputLowercase[i];
 			}
 		}
@@ -487,18 +525,47 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			}
 		}
 	}
+	else if (key == json::keys::dimension) {
+		if (input == ".") Entity.m_Dimension = '\0';
+		else if (input[0] == '#')
+		{
+			if (sutils::find_char(inputLowercase, ':')) {
+				Entity.m_Dimension = inputLowercase;
+				Entity.hasDimension = true;
+			}
+			else {
+				Entity.hasDimension = true;
+				Entity.m_Dimension += "#minecraft:";
+				for (int i = 1; i < inputLowercase.size(); ++i)
+					Entity.m_Dimension += inputLowercase[i];
+			}
+		}
+		else {
+			if (!valid_dimension(inputLowercase)) {
+				THROW_ERROR("Invalid Dimension");
+			}
+			if (sutils::find_char(inputLowercase, ':')) {
+				Entity.hasDimension = true;
+				Entity.m_Dimension = inputLowercase;
+			}
+			else {
+				Entity.m_Dimension = "minecraft:" + inputLowercase;
+				Entity.hasDimension = true;
+			}
+		}
+	}
 
 	else if (key == json::keys::F_health) {
-		if (inputUppercase == ".") Entity.m_Stat_increases.F_health = {0,0,0};
+		if (inputUppercase == ".") Entity.m_Stat_increases.F_health = { 0,0,0 };
 		else {
 			int In[3];
 			for (int i = 0; i < 3; ++i)
 				In[i] = 0;
 			sutils::split_convert(In, 3, input, ',');
-			if (In[0] <= 0 || In[1] <= 0 || In[2] <=0) {
+			if (In[0] <= 0 || In[1] <= 0 || In[2] <= 0) {
 				THROW_ERROR("Dummy this accepts whole numbers only bigger than 1 only!");
 			}
-			Entity.m_Stat_increases.F_health = { (short)In[0],(char)In[1] ,(float)In[2] /100 };
+			Entity.m_Stat_increases.F_health = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
 	}
 	else if (key == json::keys::F_damage) {
@@ -510,10 +577,10 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			sutils::split_convert(In, 3, input, ',');
 			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
-			Entity.m_Stat_increases.F_damage = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 			}
+			Entity.m_Stat_increases.F_damage = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
+	}
 	else if (key == json::keys::F_armor) {
 		if (inputUppercase == ".") Entity.m_Stat_increases.F_armor = { 0,0,0 };
 		else {
@@ -525,8 +592,8 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
 			Entity.m_Stat_increases.F_armor = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
-			}
 		}
+	}
 	else if (key == json::keys::F_armor_toughness) {
 		if (inputUppercase == ".") Entity.m_Stat_increases.F_armor_toughness = { 0,0,0 };
 		else {
@@ -536,36 +603,36 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			sutils::split_convert(In, 3, input, ',');
 			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
+			}
 			Entity.m_Stat_increases.F_armor_toughness = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
-			}
 		}
+	}
 	else if (key == json::keys::F_attack_speed) {
-			if (inputUppercase == ".") Entity.m_Stat_increases.F_attack_speed = { 0,0,0 };
-			else {
-				int In[3];
-				for (int i = 0; i < 3; ++i)
-					In[i] = 0;
-				sutils::split_convert(In, 3, input, ',');
-				if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
-					THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
-				Entity.m_Stat_increases.F_attack_speed = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
+		if (inputUppercase == ".") Entity.m_Stat_increases.F_attack_speed = { 0,0,0 };
+		else {
+			int In[3];
+			for (int i = 0; i < 3; ++i)
+				In[i] = 0;
+			sutils::split_convert(In, 3, input, ',');
+			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
+				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
+			Entity.m_Stat_increases.F_attack_speed = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
+	}
 	else if (key == json::keys::F_sight_range) {
-			if (inputUppercase == ".") Entity.m_Stat_increases.F_sight_range = { 0,0,0 };
-			else {
-				int In[3];
-				for (int i = 0; i < 3; ++i)
-					In[i] = 0;
-				sutils::split_convert(In, 3, input, ',');
-				if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
-					THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
-				Entity.m_Stat_increases.F_sight_range = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
+		if (inputUppercase == ".") Entity.m_Stat_increases.F_sight_range = { 0,0,0 };
+		else {
+			int In[3];
+			for (int i = 0; i < 3; ++i)
+				In[i] = 0;
+			sutils::split_convert(In, 3, input, ',');
+			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
+				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
+			Entity.m_Stat_increases.F_sight_range = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
+	}
 	else if (key == json::keys::F_speed) {
 		if (inputUppercase == ".") Entity.m_Stat_increases.F_speed = { 0,0,0 };
 		else {
@@ -577,20 +644,20 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
 			Entity.m_Stat_increases.F_speed = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
-			}
 		}
+	}
 
 	else if (key == json::keys::P_health) {
-		if (inputUppercase == ".") Entity.m_Stat_increases.P_health = {0,0,0};
+		if (inputUppercase == ".") Entity.m_Stat_increases.P_health = { 0,0,0 };
 		else {
 			int In[3];
 			for (int i = 0; i < 3; ++i)
 				In[i] = 0;
 			sutils::split_convert(In, 3, input, ',');
-			if (In[0] <= 0 || In[1] <= 0 || In[2] <=0) {
+			if (In[0] <= 0 || In[1] <= 0 || In[2] <= 0) {
 				THROW_ERROR("Dummy this accepts whole numbers only bigger than 1 only!");
 			}
-			Entity.m_Stat_increases.P_health = { (short)In[0],(char)In[1] ,(float)In[2] /100 };
+			Entity.m_Stat_increases.P_health = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
 	}
 	else if (key == json::keys::P_damage) {
@@ -602,10 +669,10 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			sutils::split_convert(In, 3, input, ',');
 			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
-			Entity.m_Stat_increases.P_damage = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 			}
+			Entity.m_Stat_increases.P_damage = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
+	}
 	else if (key == json::keys::P_armor) {
 		if (inputUppercase == ".") Entity.m_Stat_increases.P_armor = { 0,0,0 };
 		else {
@@ -617,8 +684,8 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
 			Entity.m_Stat_increases.P_armor = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
-			}
 		}
+	}
 	else if (key == json::keys::P_armor_toughness) {
 		if (inputUppercase == ".") Entity.m_Stat_increases.P_armor_toughness = { 0,0,0 };
 		else {
@@ -628,36 +695,36 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 			sutils::split_convert(In, 3, input, ',');
 			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
+			}
 			Entity.m_Stat_increases.P_armor_toughness = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
-			}
 		}
+	}
 	else if (key == json::keys::P_attack_speed) {
-			if (inputUppercase == ".") Entity.m_Stat_increases.P_attack_speed = { 0,0,0 };
-			else {
-				int In[3];
-				for (int i = 0; i < 3; ++i)
-					In[i] = 0;
-				sutils::split_convert(In, 3, input, ',');
-				if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
-					THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
-				Entity.m_Stat_increases.P_attack_speed = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
+		if (inputUppercase == ".") Entity.m_Stat_increases.P_attack_speed = { 0,0,0 };
+		else {
+			int In[3];
+			for (int i = 0; i < 3; ++i)
+				In[i] = 0;
+			sutils::split_convert(In, 3, input, ',');
+			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
+				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
+			Entity.m_Stat_increases.P_attack_speed = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
+	}
 	else if (key == json::keys::P_sight_range) {
-			if (inputUppercase == ".") Entity.m_Stat_increases.P_sight_range = { 0,0,0 };
-			else {
-				int In[3];
-				for (int i = 0; i < 3; ++i)
-					In[i] = 0;
-				sutils::split_convert(In, 3, input, ',');
-				if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
-					THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
-				}
-				Entity.m_Stat_increases.P_sight_range = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
+		if (inputUppercase == ".") Entity.m_Stat_increases.P_sight_range = { 0,0,0 };
+		else {
+			int In[3];
+			for (int i = 0; i < 3; ++i)
+				In[i] = 0;
+			sutils::split_convert(In, 3, input, ',');
+			if (In[0] == 0 || In[1] == 0 || In[2] == 0) {
+				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
+			Entity.m_Stat_increases.P_sight_range = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
 		}
+	}
 	else if (key == json::keys::P_speed) {
 		if (inputUppercase == ".") Entity.m_Stat_increases.P_speed = { 0,0,0 };
 		else {
@@ -669,14 +736,14 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying){
 				THROW_ERROR("Dummy this accepts whole numbers bigger than 1 only!");
 			}
 			Entity.m_Stat_increases.P_speed = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
-			}
 		}
-		
+	}
+
 	else if (key == json::keys::NBT) {
-			if (input[0] != '{' || input[input.size()-1] != '}') { THROW_ERROR("The NBT must be in brackets!"); }
-			else if (input[0] == '{' && input[1] == '}') { Entity.hasNBT = false; }
-			else { Entity.m_NBT = input, Entity.hasNBT = true; }
-		}
+		if (input[0] != '{' || input[input.size() - 1] != '}') { THROW_ERROR("The NBT must be in brackets!"); }
+		else if (input[0] == '{' && input[1] == '}') { Entity.hasNBT = false; }
+		else { Entity.m_NBT = input, Entity.hasNBT = true; }
+	}
 
 	return 0;
 }
@@ -706,14 +773,17 @@ inline std::ostream& operator <<(std::ostream& os, const min_max& m) {
 	return os;
 }
 inline std::ostream& operator <<(std::ostream& os, const stat_increases& s) {
-	os << "\n P Health          N: " << s.F_health.n << " | P: " << (float)s.F_health.p / 100 << " | B: " << s.F_health.b;
+	os << "\n F = Flat";
+	os << "\n F Health          N: " << s.F_health.n << " | P: " << (float)s.F_health.p / 100 << " | B: " << s.F_health.b;
 	os << "\n F Damage          N: " << s.F_damage.n << " | P: " << (float)s.F_damage.p / 100 << " | B: " << s.F_damage.b;
 	os << "\n F Speed           N: " << s.F_speed.n << " | P: " << (float)s.F_speed.p / 100 << " | B: " << s.F_speed.b;
 	os << "\n F Sight Range     N: " << s.F_sight_range.n << " | P: " << (float)s.F_sight_range.p / 100 << " | B: " << s.F_sight_range.b;
 	os << "\n F Attack Speed    N: " << s.F_attack_speed.n << " | P: " << (float)s.F_attack_speed.p / 100 << " | B: " << s.F_attack_speed.b;
 	os << "\n F Armor           N: " << s.F_armor.n << " | P: " << (float)s.F_armor.p / 100 << " | B: " << s.F_armor.b;
 	os << "\n F Armor Toughness N: " << s.F_armor_toughness.n << " | P: " << (float)s.F_armor_toughness.p / 100 << " | B: " << s.F_armor_toughness.b;
+#if __PUBLIC_RELEASE == true
 	os << "\n--------------------------------------------";
+	os << "\n % = Percentage";
 	os << "\n % Health          N: " << s.P_health.n << " | P: " << (float)s.P_health.p / 100 << " | B: " << s.P_health.b;
 	os << "\n % Damage          N: " << s.P_damage.n << " | P: " << (float)s.P_damage.p / 100 << " | B: " << s.P_damage.b;
 	os << "\n % Speed           N: " << s.P_speed.n << " | P: " << (float)s.P_speed.p / 100 << " | B: " << s.P_speed.b;
@@ -721,6 +791,7 @@ inline std::ostream& operator <<(std::ostream& os, const stat_increases& s) {
 	os << "\n % Attack Speed    N: " << s.P_attack_speed.n << " | P: " << (float)s.P_attack_speed.p / 100 << " | B: " << s.P_attack_speed.b;
 	os << "\n % Armor           N: " << s.P_armor.n << " | P: " << (float)s.P_armor.p / 100 << " | B: " << s.P_armor.b;
 	os << "\n % Armor Toughness N: " << s.P_armor_toughness.n << " | P: " << (float)s.P_armor_toughness.p / 100 << " | B: " << s.P_armor_toughness.b;
+#endif
 	return os;
 }
 inline bool operator==(const binomial B1, const binomial B2) {

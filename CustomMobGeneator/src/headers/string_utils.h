@@ -81,7 +81,7 @@ namespace sutils {
 		bool flag;
 		for (int i = 0; i < input.size(); ++i) {
 			flag = false;
-			if (input[i] >= '0' && input[i] <= '9' || input[i] == '-')
+			if (input[i] >= '0' && input[i] <= '9' || input[0] == '-')
 				flag = true;
 			if (!flag)
 				return false;
@@ -95,4 +95,3 @@ namespace sutils {
 		return false;
 	}
 }
-// 1s23 
