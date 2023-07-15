@@ -4,7 +4,6 @@ class GenesisGearGenerator
 {
     public static void main (String[] args) 
     {
-        
         GenesisGearGenerator guh = new GenesisGearGenerator();
         guh.output();
     }
