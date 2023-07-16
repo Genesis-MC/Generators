@@ -45,9 +45,8 @@ void entity::printCommand() {
 	std::cout << m_Name << '"';
 	std::cout << ",weight:";
 	std::cout << m_Weight;
-	if (m_Weight_level_multiplier != 0.0f) {
-		std::cout << ",wieght_level_multiplier:" << to_string(m_Weight_level_multiplier) << "f";
-	}
+	if (m_Weight_level_multiplier != 0.0f)
+		std::cout << ",wieght_level_multiplier:{value:" << to_string(m_Weight_level_multiplier) << "f}";
 	if (m_Base_entity != m_Registry)
 		std::cout << ",base_entity:\"" << m_Base_entity << '"';
 	string Command = "";

@@ -84,6 +84,6 @@ int main() {
 			exit(EXIT_SUCCESS);
 		}
 		else
-			cout << "\nDummy enter (Y / N)!";
+			cnsl::print_colored_reset("\nDummy enter (Y / N)!",ConsoleColorAttributes::Red_FG);
 	}
 }
