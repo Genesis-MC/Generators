@@ -70,10 +70,6 @@ class GenesisGearGenerator
         //STATS
         int[] stats = new int[13];
         String[] statVal = {"physical_power","magic_power","attack_speed","health","armor","armor_toughness","knockback_resistance","mana_pool","mana_regen","speed","luck","artifact_power","ability_haste"};
-        boolean hasPow = false;
-        boolean hasDef = false;
-        boolean hasMana = false;
-        boolean hasUtil = false;
 
         //TUNGSTEN ITEM UUID
         int tung;
@@ -103,7 +99,7 @@ class GenesisGearGenerator
         stats[1] = scanner.nextInt();
         System.out.print("Attack Speed: ");
         stats[2] = scanner.nextInt();
-        System.out.print("\nHealth: ");
+        System.out.print("Health: ");
         stats[3] = scanner.nextInt();
         System.out.print("Armor: ");
         stats[4] = scanner.nextInt();
@@ -111,11 +107,11 @@ class GenesisGearGenerator
         stats[5] = scanner.nextInt();
         System.out.print("Knockback Resistance: ");
         stats[6] = scanner.nextInt();
-        System.out.print("\nMana Pool: ");
+        System.out.print("Mana Pool: ");
         stats[7] = scanner.nextInt();
         System.out.print("Mana Regen: ");
         stats[8] = scanner.nextInt();
-        System.out.print("\nMovement Speed: ");
+        System.out.print("Movement Speed: ");
         stats[9] = scanner.nextInt();
         System.out.print("Luck: ");
         stats[10] = scanner.nextInt();
@@ -125,21 +121,6 @@ class GenesisGearGenerator
         stats[12] = scanner.nextInt();
         
         //FORMATTING CUSTOM STATS AND CHECKING IF CERTAIN GROUPS OF STATS EXIST
-        for(int i = 0; i<13; i++)
-        {
-            if(stats[i] > 0)
-            {
-                output += statVal[i] + ":" + stats[i] + ",";
-                if(i >= 0 && i <= 2)
-                    hasPow = true;
-                else if(i >= 3 && i <= 6)
-                    hasDef = true;
-                else if(i >= 7 && i <= 8)
-                    hasMana = true;
-                else if(i >= 9 && i <= 12)
-                    hasUtil = true;
-            }
-        }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
         
@@ -159,26 +140,21 @@ class GenesisGearGenerator
         output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner) + ",'{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
 
         //FORMATTING CUSTOM GLYPHS AND BORDERS FOR LORE
+        int count = 0;
         for(int i = 0; i<13; i++)
         {
-            if(stats[i] > 0)
+            if(stats[i] != 0)
+            {
+                count++;
                 output += "{\\\"translate\\\":\\\"genesis.stats.wrapper." + statVal[i] + "." + getLen(stats[i]) + "\\\",\\\"with\\\":[" + stats[i] + "]},";
+                if(count > 5)
+                {
+                    count = 0;
+                    output = output.substring(0,output.length()-1);
+                    output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
+                }
+            }
 
-            if(i == 2 && hasPow && (hasDef || hasMana || hasUtil) )
-            {
-                output = output.substring(0,output.length()-1);
-                output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
-            }
-            else if(i == 6 && hasDef && (hasMana || hasUtil))
-            {
-                output = output.substring(0,output.length()-1);
-                output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
-            }
-            else if(i == 8 && hasMana && hasUtil)
-            {
-                output = output.substring(0,output.length()-1);
-                output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
-            }
         }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
@@ -228,7 +204,7 @@ class GenesisGearGenerator
     private String addGlint(Scanner scanner)
     {
         boolean glint;
-        System.out.print("\nAdd enchant glint (true/false): ");
+        System.out.print("\nAdd enchant glint (true/false, Note: Enchant glint prevents gear from being enchanting table interactable): ");
         glint = scanner.nextBoolean();
         scanner.nextLine();
         if(glint)
