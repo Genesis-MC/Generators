@@ -9,7 +9,7 @@ int main() {
 	entity Entity;
 	cnsl::clear();
 	cnsl::color(ConsoleColorAttributes::Yellow_FG);
-	cout << "NOTE: STAT INCREASES, WEIGHT LEVEL MULTIPLIER,\nSPAWN PACK,SPAWN PACK DISTANCE, BASE ENTITY AREN'T FUNCTIONAL YET IN THE DATAPACK\n";
+	cout << "NOTE: SPAWN PACK and SPAWN PACK DISTANCE AREN'T FUNCTIONAL YET IN THE DATAPACK\n";
 	cout << "INT = Integer (whole number)\n";
 	cout << "FLOAT = Floats (decimal number)\n";
 	cout << "BOOLEAN = True or False value (0 or 1)\n";
