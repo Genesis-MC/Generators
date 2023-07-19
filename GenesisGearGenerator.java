@@ -121,6 +121,13 @@ class GenesisGearGenerator
         stats[12] = scanner.nextInt();
         
         //FORMATTING CUSTOM STATS AND CHECKING IF CERTAIN GROUPS OF STATS EXIST
+        for(int i = 0; i<13; i++)
+        {
+            if(stats[i] > 0)
+            {
+                output += statVal[i] + ":" + stats[i] + ",";
+            }
+        }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
         
