@@ -63,8 +63,8 @@ void entity::printCommand() {
 	if (hasSpawnPackDistance) {
 		Command += ",spawn_pack_distance:";
 		SavedSize = (int)Command.size();
-		if (m_Spawn_pack_distance.min != 0)Command += ",min:" + to_string(m_Spawn_pack_distance.min);
-		if (m_Spawn_pack_distance.max != 0)Command += ",max:" + to_string(m_Spawn_pack_distance.max);
+		if (m_Spawn_pack_distance.min != 0)Command += ",min:" + to_string(m_Spawn_pack_distance.min) + "f";
+		if (m_Spawn_pack_distance.max != 0)Command += ",max:" + to_string(m_Spawn_pack_distance.max) + "f";
 		if (Command[SavedSize] == ',')
 			Command[SavedSize] = '{';
 		Command += "}";
@@ -88,6 +88,8 @@ void entity::printCommand() {
 				Command += ",sight_range:{n:" + to_string(m_Stat_increases.F_sight_range.n) + "s,p:" + to_string(m_Stat_increases.F_sight_range.p) + "b,b:" + to_string(m_Stat_increases.F_sight_range.b) + "f}";
 			if (m_Stat_increases.F_speed.hasValue())
 				Command += ",speed:{n:" + to_string(m_Stat_increases.F_speed.n) + "s,p:" + to_string(m_Stat_increases.F_speed.p) + "b,b:" + to_string(m_Stat_increases.F_speed.b) + "f}";
+			if (m_Stat_increases.P_knockback_resistance.hasValue())
+				Command += ",knockback_resistance:{n:" + to_string(m_Stat_increases.P_knockback_resistance.n) + "s,p:" + to_string(m_Stat_increases.P_knockback_resistance.p) + "b,b:" + to_string(m_Stat_increases.P_knockback_resistance.b) + "f}";
 			if (Command[SavedSize] == ',')
 				Command[SavedSize] = '{';
 			Command += '}';
@@ -111,6 +113,8 @@ void entity::printCommand() {
 				Command += ",sight_range:{n:" + to_string(m_Stat_increases.P_sight_range.n) + "s,p:" + to_string(m_Stat_increases.P_sight_range.p) + "b,b:" + to_string(m_Stat_increases.P_sight_range.b) + "f}";
 			if (m_Stat_increases.P_speed.hasValue())
 				Command += ",speed:{n:" + to_string(m_Stat_increases.P_speed.n) + "s,p:" + to_string(m_Stat_increases.P_speed.p) + "b,b:" + to_string(m_Stat_increases.P_speed.b) + "f}";
+			if (m_Stat_increases.P_knockback_resistance.hasValue())
+				Command += ",knockback_resistance:{n:" + to_string(m_Stat_increases.P_knockback_resistance.n) + "s,p:" + to_string(m_Stat_increases.P_knockback_resistance.p) + "b,b:" + to_string(m_Stat_increases.P_knockback_resistance.b) + "f}";
 			if (Command[SavedSize] == ',')
 				Command[SavedSize] = '{';
 			Command += '}';
@@ -125,10 +129,10 @@ void entity::printCommand() {
 			if (m_Moon_phase.max != 0) Command += "max:" + to_string(m_Moon_phase.max) + "b,";
 			if (m_Moon_phase.except != 0) Command += "except:" + to_string(m_Moon_phase.except) + "b,";
 			if (m_Moon_phase.exact != 0) Command += "exact:" + to_string(m_Moon_phase.exact) + "b,";
-			if (m_Moon_phase.on_even_days != 0) Command += "on_even_days:" + to_string(m_Moon_phase.on_even_days) + "b,";
-			if (m_Moon_phase.on_odd_days != 0) Command += "on_odd_days:" + to_string(m_Moon_phase.on_odd_days) + "b,";
-			if (m_Moon_phase.on_prime_days != 0) Command += "on_prime_days:" + to_string(m_Moon_phase.on_prime_days) + "b,";
-			if (m_Moon_phase.blood_moon != 0) Command += "blood_moon:" + to_string(m_Moon_phase.blood_moon) + "b,";
+			if (m_Moon_phase.on_even_days != 0) Command += "on_even_days:1b";
+			if (m_Moon_phase.on_odd_days != 0) Command += "on_odd_days:1b";
+			if (m_Moon_phase.on_prime_days != 0) Command += "on_prime_days:1b";
+			if (m_Moon_phase.blood_moon != 0) Command += "blood_moon:1b";
 			Command[Command.size() - 1] = '}';
 		}
 		if (hasLevel) {
@@ -553,7 +557,32 @@ int generator::dialogue(entity& Entity, int key, const std::string& saying) {
 			}
 		}
 	}
-
+	else if (key == json::keys::F_knockback_resistance) {
+		if (inputUppercase == ".") Entity.m_Stat_increases.F_knockback_resistance = { 0,0,0 };
+		else {
+			int In[3];
+			for (int i = 0; i < 3; ++i)
+				In[i] = 0;
+			sutils::split_convert(In, 3, input, ',');
+			if (In[0] <= 0 || In[1] <= 0 || In[2] <= 0) {
+				THROW_ERROR("Dummy this accepts whole numbers only bigger than 1 only!");
+			}
+			Entity.m_Stat_increases.F_knockback_resistance = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
+		}
+		}
+	else if (key == json::keys::P_knockback_resistance) {
+			if (inputUppercase == ".") Entity.m_Stat_increases.P_knockback_resistance = { 0,0,0 };
+			else {
+				int In[3];
+				for (int i = 0; i < 3; ++i)
+					In[i] = 0;
+				sutils::split_convert(In, 3, input, ',');
+				if (In[0] <= 0 || In[1] <= 0 || In[2] <= 0) {
+					THROW_ERROR("Dummy this accepts whole numbers only bigger than 1 only!");
+				}
+				Entity.m_Stat_increases.P_knockback_resistance = { (short)In[0],(char)In[1] ,(float)In[2] / 100 };
+			}
+		}
 	else if (key == json::keys::F_health) {
 		if (inputUppercase == ".") Entity.m_Stat_increases.F_health = { 0,0,0 };
 		else {
@@ -773,23 +802,25 @@ inline std::ostream& operator <<(std::ostream& os, const min_max& m) {
 }
 inline std::ostream& operator <<(std::ostream& os, const stat_increases& s) {
 	os << "\n F = Flat";
-	os << "\n F Health          N: " << s.F_health.n << " | P: " << (float)s.F_health.p / 100 << " | B: " << s.F_health.b;
-	os << "\n F Damage          N: " << s.F_damage.n << " | P: " << (float)s.F_damage.p / 100 << " | B: " << s.F_damage.b;
-	os << "\n F Speed           N: " << s.F_speed.n << " | P: " << (float)s.F_speed.p / 100 << " | B: " << s.F_speed.b;
-	os << "\n F Sight Range     N: " << s.F_sight_range.n << " | P: " << (float)s.F_sight_range.p / 100 << " | B: " << s.F_sight_range.b;
-	os << "\n F Attack Speed    N: " << s.F_attack_speed.n << " | P: " << (float)s.F_attack_speed.p / 100 << " | B: " << s.F_attack_speed.b;
-	os << "\n F Armor           N: " << s.F_armor.n << " | P: " << (float)s.F_armor.p / 100 << " | B: " << s.F_armor.b;
-	os << "\n F Armor Toughness N: " << s.F_armor_toughness.n << " | P: " << (float)s.F_armor_toughness.p / 100 << " | B: " << s.F_armor_toughness.b;
+	os << "\n F Health               N: " << s.F_health.n << " | P: " << (float)s.F_health.p / 100 << " | B: " << s.F_health.b;
+	os << "\n F Damage               N: " << s.F_damage.n << " | P: " << (float)s.F_damage.p / 100 << " | B: " << s.F_damage.b;
+	os << "\n F Speed                N: " << s.F_speed.n << " | P: " << (float)s.F_speed.p / 100 << " | B: " << s.F_speed.b;
+	os << "\n F Sight Range          N: " << s.F_sight_range.n << " | P: " << (float)s.F_sight_range.p / 100 << " | B: " << s.F_sight_range.b;
+	os << "\n F Attack Speed         N: " << s.F_attack_speed.n << " | P: " << (float)s.F_attack_speed.p / 100 << " | B: " << s.F_attack_speed.b;
+	os << "\n F Armor                N: " << s.F_armor.n << " | P: " << (float)s.F_armor.p / 100 << " | B: " << s.F_armor.b;
+	os << "\n F Armor Toughness      N: " << s.F_armor_toughness.n << " | P: " << (float)s.F_armor_toughness.p / 100 << " | B: " << s.F_armor_toughness.b;
+	os << "\n F Knockback Resistance N: " << s.F_knockback_resistance.n << " | P: " << (float)s.F_knockback_resistance.p / 100 << " | B: " << s.F_knockback_resistance.b;
 #if __PUBLIC_RELEASE == true
 	os << "\n--------------------------------------------";
 	os << "\n % = Percentage";
-	os << "\n % Health          N: " << s.P_health.n << " | P: " << (float)s.P_health.p / 100 << " | B: " << s.P_health.b;
-	os << "\n % Damage          N: " << s.P_damage.n << " | P: " << (float)s.P_damage.p / 100 << " | B: " << s.P_damage.b;
-	os << "\n % Speed           N: " << s.P_speed.n << " | P: " << (float)s.P_speed.p / 100 << " | B: " << s.P_speed.b;
-	os << "\n % Sight Range     N: " << s.P_sight_range.n << " | P: " << (float)s.P_sight_range.p / 100 << " | B: " << s.P_sight_range.b;
-	os << "\n % Attack Speed    N: " << s.P_attack_speed.n << " | P: " << (float)s.P_attack_speed.p / 100 << " | B: " << s.P_attack_speed.b;
-	os << "\n % Armor           N: " << s.P_armor.n << " | P: " << (float)s.P_armor.p / 100 << " | B: " << s.P_armor.b;
-	os << "\n % Armor Toughness N: " << s.P_armor_toughness.n << " | P: " << (float)s.P_armor_toughness.p / 100 << " | B: " << s.P_armor_toughness.b;
+	os << "\n % Health               N: " << s.P_health.n << " | P: " << (float)s.P_health.p / 100 << " | B: " << s.P_health.b;
+	os << "\n % Damage               N: " << s.P_damage.n << " | P: " << (float)s.P_damage.p / 100 << " | B: " << s.P_damage.b;
+	os << "\n % Speed                N: " << s.P_speed.n << " | P: " << (float)s.P_speed.p / 100 << " | B: " << s.P_speed.b;
+	os << "\n % Sight Range          N: " << s.P_sight_range.n << " | P: " << (float)s.P_sight_range.p / 100 << " | B: " << s.P_sight_range.b;
+	os << "\n % Attack Speed         N: " << s.P_attack_speed.n << " | P: " << (float)s.P_attack_speed.p / 100 << " | B: " << s.P_attack_speed.b;
+	os << "\n % Armor                N: " << s.P_armor.n << " | P: " << (float)s.P_armor.p / 100 << " | B: " << s.P_armor.b;
+	os << "\n % Armor Toughness      N: " << s.P_armor_toughness.n << " | P: " << (float)s.P_armor_toughness.p / 100 << " | B: " << s.P_armor_toughness.b;
+	os << "\n % Knockback Resistance N: " << s.P_knockback_resistance.n << " | P: " << (float)s.P_knockback_resistance.p / 100 << " | B: " << s.P_knockback_resistance.b;
 #endif
 	return os;
 }

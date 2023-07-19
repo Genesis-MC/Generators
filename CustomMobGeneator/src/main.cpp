@@ -9,7 +9,7 @@ int main() {
 	entity Entity;
 	cnsl::clear();
 	cnsl::color(ConsoleColorAttributes::Yellow_FG);
-	cout << "NOTE: STAT INCREASES, WEIGHT LEVEL MULTIPLIER,\nSPAWN PACK,SPAWN PACK DISTANCE, BASE ENTITY AREN'T FUNCTIONAL YET IN THE DATAPACK\n";
+	cout << "NOTE: SPAWN PACK and SPAWN PACK DISTANCE AREN'T FUNCTIONAL YET IN THE DATAPACK\n";
 	cout << "INT = Integer (whole number)\n";
 	cout << "FLOAT = Floats (decimal number)\n";
 	cout << "BOOLEAN = True or False value (0 or 1)\n";
@@ -29,7 +29,7 @@ int main() {
 	cnsl::print_colored_reset("uses binomial distribution where N is the amount of tries, \n P is the chance B is the base(amount added if success float)", ConsoleColorAttributes::Cyan_FG);
 #endif
 #if __PUBLIC_RELEASE == true
-	cnsl::print_colored_reset("stat increases: ", ConsoleColorAttributes::Magenta_FG);
+	cnsl::print_colored_reset("stat increases: ", ConsoleColorAttributes::Cyan_FG);
 	cnsl::print_colored_reset("uses binomial distribution where N is the amount of tries, \n P is the chance B is the base(amount added if success float)", ConsoleColorAttributes::Cyan_FG);
 	Generator.dialogue(Entity, json::keys::stat_increases,"");
 	if (Entity.hasStatIncreases) {
@@ -43,6 +43,7 @@ int main() {
 			Generator.dialogue(Entity, json::keys::F_armor_toughness, "Flat Armor Toughness (n,p,b '.' to skip)?");
 			Generator.dialogue(Entity, json::keys::F_attack_speed, "Flat Attack Speed (n,p,b '.' to skip)?");
 			Generator.dialogue(Entity, json::keys::F_sight_range, "Flat Sight Range (n,p,b '.' to skip)?");
+			Generator.dialogue(Entity, json::keys::F_knockback_resistance, "Flat Knockback Resistance (n,p,b '.' to skip)?");
 		}
 #if __PUBLIC_RELEASE == true
 		Generator.dialogue(Entity, json::keys::percentage_stat_increases, "Percentage Stats ( Y / N '.' to skip)? ");
@@ -54,13 +55,14 @@ int main() {
 			Generator.dialogue(Entity, json::keys::P_armor_toughness, "Percentage Armor Toughness (n,p,b '.' to skip)?");
 			Generator.dialogue(Entity, json::keys::P_attack_speed, "Percentage Attack Speed (n,p,b '.' to skip)?");
 			Generator.dialogue(Entity, json::keys::P_sight_range, "Percentage Sight Range (n,p,b '.' to skip)?"); 
+			Generator.dialogue(Entity, json::keys::P_knockback_resistance, "Percentage Knockback Resistance (n,p,b '.' to skip)?");
 		}
 	}
 #endif
 	Generator.dialogue(Entity, json::keys::requirements, "requirements (Y / N)?");
 	// i was going to write 'execute if' instead of if statement :facepalm:
 	if (Entity.hasRequirements) {
-		Generator.dialogue(Entity, json::keys::moon_phase, "Moon Phase (Y / N '.' to skip?)");
+		Generator.dialogue(Entity, json::keys::moon_phase, "moon nhase (Y / N '.' to skip?)");
 		Generator.dialogue(Entity, json::keys::level, "level (Y / N '.' to skip)?");
 		Generator.dialogue(Entity, json::keys::dimension, "dimension(STRING '.' to skip)");
 		Generator.dialogue(Entity, json::keys::biome, "biome(STRING '.' to skip)");

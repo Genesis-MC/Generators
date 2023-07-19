@@ -52,6 +52,7 @@ namespace json {
 		P_attack_speed,
 		P_armor,
 		P_armor_toughness,
+		P_knockback_resistance,
 
 		F_health,
 		F_damage,
@@ -60,6 +61,7 @@ namespace json {
 		F_attack_speed,
 		F_armor,
 		F_armor_toughness,
+		F_knockback_resistance,
 		NBT
 	};
 }
@@ -81,6 +83,7 @@ public:
 	binomial P_attack_speed = {0,0,0};
 	binomial P_armor = {0,0,0};
 	binomial P_armor_toughness = {0,0,0};
+	binomial P_knockback_resistance = { 0,0,0 };
 
 	binomial F_health = {0,0,0};
 	binomial F_damage = {0,0,0};
@@ -89,6 +92,7 @@ public:
 	binomial F_attack_speed = {0,0,0};
 	binomial F_armor = {0,0,0};
 	binomial F_armor_toughness = {0,0,0};
+	binomial F_knockback_resistance = { 0,0,0 };
 	// {flat:{health:{n:0,p:50b}}}
 	friend std::ostream& operator <<(std::ostream& os, const stat_increases& m);
 };
