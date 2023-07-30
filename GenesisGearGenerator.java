@@ -22,7 +22,7 @@ class GenesisGearGenerator
             System.out.print("\n{" + outputGear(scanner) + ",HideFlags:131}");
         scanner.close();
     }
-    //gen:{name:\"7-League Boots\"},
+
     private String outputItem(Scanner scanner)
     {
         String name;
