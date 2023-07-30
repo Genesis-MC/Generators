@@ -22,7 +22,7 @@ class GenesisGearGenerator
             System.out.print("\n{" + outputGear(scanner) + ",HideFlags:131}");
         scanner.close();
     }
-
+    //gen:{name:\"7-League Boots\"},
     private String outputItem(Scanner scanner)
     {
         String name;
@@ -32,7 +32,7 @@ class GenesisGearGenerator
         boolean underlined;
         String CustomModelData;
 
-        String output = "display:{";
+        String output = "gen:{name:\\\"";
 
         //NAME
         System.out.print("Item Name: ");
@@ -45,6 +45,7 @@ class GenesisGearGenerator
         bold = scanner.nextBoolean();
         System.out.print("\nUnderlined (true/false): ");
         underlined = scanner.nextBoolean();
+        output += name + "\\\"},display:{";
         output += itemName(name, color, italic, bold, underlined) + "Lore:[";
         output += rarityAndType(scanner) + "]}";
 
@@ -77,7 +78,7 @@ class GenesisGearGenerator
         
         for(int i = 0; i<13; i++)
             stats[i] = 0;
-        String output = "gen:{stat:{";
+        String output = "gen:{name:\\\"";
         //INPUT ITEM NAME REQ
         System.out.print("Item Name: ");
         name = scanner.nextLine();
@@ -89,6 +90,7 @@ class GenesisGearGenerator
         bold = scanner.nextBoolean();
         System.out.print("\nUnderlined (true/false): ");
         underlined = scanner.nextBoolean();
+        output += name + "\\\",stat:{";
 
         //INPUT CUSTOM STATS
         System.out.print("Input item slot as an integer (Mainhand = 1; Helmet = 2; Chestplate = 3; Leggings = 4; Boots = 5): ");
