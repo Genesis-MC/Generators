@@ -178,29 +178,29 @@ class GenesisGearGenerator
         String rarity;
         String itemType = "";
 
-        String output = "'{\\\"text\\\":\\\"";
+        String output = "'[{\\\"text\\\":\\\"A\\\",\\\"font\\\":\\\"genesis:icon\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false},{\\\"text\\\":\\\"";
         scanner.nextLine();
         //LORE
         System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
         rarity = scanner.nextLine();
         System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
         itemType = scanner.nextLine();
-        output += rarity + " " + itemType + "\\\",\\\"color\\\":\\\"";
+        output += rarity + " " + itemType + "\\\",\\\"font\\\":\\\"minecraft:default\\\",\\\"color\\\":\\\"";
 
         if(rarity.equals("Common"))
-            output += "white\\\",\\\"italic\\\":false}'";
+            output += "white\\\",\\\"italic\\\":false}]'";
         else if(rarity.equals("Uncommon"))
-            output += "aqua\\\",\\\"italic\\\":false}'";
+            output += "aqua\\\",\\\"italic\\\":false}]'";
         else if(rarity.equals("Rare"))
-            output += "yellow\\\",\\\"italic\\\":false}'";
+            output += "yellow\\\",\\\"italic\\\":false}]'";
         else if(rarity.equals("Epic"))
-            output += "light_purple\\\",\\\"italic\\\":false}'";
+            output += "light_purple\\\",\\\"italic\\\":false}]'";
         else if(rarity.equals("Legendary"))
-            output += "#3b2b06\\\",\\\"italic\\\":false}'";
+            output += "#3b2b06\\\",\\\"italic\\\":false}]'";
         else if(rarity.equals("Mythical"))
-            output += "#211905\\\",\\\"italic\\\":false}'";
+            output += "#211905\\\",\\\"italic\\\":false}]'";
         else
-            output += "#403303\\\",\\\"italic\\\":false}'";
+            output += "#403303\\\",\\\"italic\\\":false}]'";
 
         return output;
     }
