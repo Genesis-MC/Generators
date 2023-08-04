@@ -68,6 +68,8 @@ class GenesisGearGenerator
         boolean bold;
         boolean underlined;
 
+        String CustomModelData;
+
         //STATS
         int[] stats = new int[13];
         String[] statVal = {"physical_power","magic_power","attack_speed","health","armor","armor_toughness","knockback_resistance","mana_pool","mana_regen","speed","luck","artifact_power","ability_haste"};
@@ -167,7 +169,13 @@ class GenesisGearGenerator
         }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
-        output += "]}','{\\\"text\\\":\\\"\\\"}']}" + addGlint(scanner);
+        output += "]}','{\\\"text\\\":\\\"\\\"}']}";
+
+        //TEXTURES
+        System.out.print("\nCustom Model Data (If not applicable, input 0; Else input last 3 values: 982---): ");
+        CustomModelData = scanner.nextLine();
+        if(CustomModelData.equals("0")==false)
+            output += ",CustomModelData:982" + CustomModelData;
           
         return output;
     }
