@@ -148,7 +148,7 @@ class GenesisGearGenerator
             //if weapon
             output += "}},AttributeModifiers:[{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.mainhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\\\"mainhand\\\"},{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.offhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\\\"offhand\\\"";
         }
-        output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner) + ",'{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
+        output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner) + ",'{\\\"translate\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
 
         //FORMATTING CUSTOM GLYPHS AND BORDERS FOR LORE
         int count = 0;
@@ -162,14 +162,14 @@ class GenesisGearGenerator
                 {
                     count = 0;
                     output = output.substring(0,output.length()-1);
-                    output += "]}','{\\\"text\\\":\\\"\\\"}','{\\\"text\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
+                    output += "]}','{\\\"translate\\\":\\\"\\\"}','{\\\"translate\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
                 }
             }
 
         }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
-        output += "]}','{\\\"text\\\":\\\"\\\"}']}";
+        output += "]}','{\\\"translate\\\":\\\"\\\"}']}";
 
         //TEXTURES
         System.out.print("\nCustom Model Data (If not applicable, input 0; Else input last 3 values: 982---): ");
@@ -186,7 +186,7 @@ class GenesisGearGenerator
         String rarity;
         String itemType = "";
 
-        String output = "'[{\\\"text\\\":\\\"A\\\",\\\"font\\\":\\\"genesis:icon\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false},{\\\"text\\\":\\\"";
+        String output = "'[{\\\"translate\\\":\\\"A\\\",\\\"font\\\":\\\"genesis:icon\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false},{\\\"translate\\\":\\\"";
         scanner.nextLine();
         //LORE
         System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
@@ -215,7 +215,7 @@ class GenesisGearGenerator
 
     private String itemName(String name, String color, boolean italic, boolean bold, boolean underlined)
     {
-        return "Name:'{\\\"text\\\":\\\"" + name + "\\\",\\\"color\\\":\\\"" + color + "\\\",\\\"italic\\\":" + italic + ",\\\"bold\\\":" + bold + ",\\\"underlined\\\":" + underlined + "}',";
+        return "Name:'{\\\"translate\\\":\\\"" + name + "\\\",\\\"color\\\":\\\"" + color + "\\\",\\\"italic\\\":" + italic + ",\\\"bold\\\":" + bold + ",\\\"underlined\\\":" + underlined + "}',";
     }
 
     private String addGlint(Scanner scanner)
