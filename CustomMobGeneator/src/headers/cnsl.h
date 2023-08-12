@@ -1,5 +1,4 @@
 #pragma once
-#include "headers/global.h"
 #include <iostream>
 #ifndef _WIN32
 #define _WIN32 0
@@ -8,7 +7,7 @@
 #if _WIN32 == true
 // God it took me so long to get the stupid colors you gotta appreciate that for such a useless program lol
 #include <Windows.h>
-enum ConsoleColorAttributes {
+enum ConsoleColorAttributes : unsigned short {
     Reset = 0,
     Black_FG = 0,
     Blue_FG = 1,
@@ -83,6 +82,7 @@ enum ConsoleColorAttributes {
 #else
 enum ConsoleColorAttributes {
     Reset = 0,
+    Red_FGG = 11,
     Black_FG = 30,
     Black_BG = 40,
     Red_FG = 31,
@@ -161,6 +161,7 @@ namespace cnsl {
     void clear();
     void print_colored(const char* x, ConsoleColorAttributes Color);
     void print_colored_reset(const char* x, ConsoleColorAttributes Color);
+    void print_newline_colored_reset(const char* x, ConsoleColorAttributes Color);
     void color(ConsoleColorAttributes Color);
     void reset_color();
 }
