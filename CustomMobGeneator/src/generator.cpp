@@ -45,7 +45,9 @@ void Generator::start()
     moonPhase();
     block();
     biome();
+    dimension();
   }
+  cnsl::print_colored_reset("\nStat Increases are binomialy distributed and are inputted as three whole numbers sepreated by a comma like this\n N,P,B where N is the amount of tries\nP is the chance of success and B is the value increase for each success\nNOTE THAT THE INPUTS ARE WHOLE NUMBERS AND 'B' IS DIVIDED BY 100 IN THE END SO WHEN YOU INPUT 1 \nIT WILL BE 0.01 NOT 1 SO BE SURE TO INPUT IT MULTIPLIED BY 100 (will fix)",ConsoleColorAttributes::Yellow_FG);
   FstatIncreases();
   if (Entity.StatIncreases.hasFStats == 1) {
     statIncreases("\nDamage: ", &Entity.StatIncreases.F_Damage.n);
@@ -72,9 +74,9 @@ void Generator::start()
   NBT();
   print();
   printCommand();
-
+  cnsl::print_colored_reset("\nGreat! Now copy the command into data/gen/mobs/data/registry.mcfunction between the 2 function tags",ConsoleColorAttributes::Green_FG);
   while (true) {
-    cnsl::print_colored_reset("\nWant To Make Another Mob? ", ConsoleColorAttributes::Cyan_FG);
+    cnsl::print_colored_reset("\nWant To Make Another Mob? (reply with 'Y' or press enter to exit) ", ConsoleColorAttributes::Cyan_FG);
 
     getInput();
     if (input == "y" || input == "Y")
@@ -304,8 +306,8 @@ void Generator::printCommand()
   }
 
 
-  if (!e.NBT.empty()) {
-    cmd += ",nbt:";
+  if (!e.NBT.empty() && e.NBT != "{}") {
+    cmd += ",entity_data:";
     cmd += e.NBT;
   }
   cmd += "}";
@@ -489,8 +491,9 @@ int Generator::level(LevelBranches branch)
       {
         THROW_ERROR("\n[!ERROR!] The max is the less than the min", level(LevelBranches::MAX));
       }
-      else
+      else {
         Entity.Level.max = to_number(input);
+      }
     }
   }
   //Entity.Level.min = (Entity.Level.min != Entity.Level.max);
@@ -556,16 +559,18 @@ int Generator::moonPhase(MoonPhaseBranches branch)
     if (input.empty())
       Entity.MoonPhase.max = 0;
     else {
-      if (to_number(input) < Entity.MoonPhase.min)
+      if (to_number(input) <= Entity.MoonPhase.min)
       {
-        THROW_ERROR("\n[!ERROR!] The max is the less than the min", moonPhase(MoonPhaseBranches::MAX));
+        THROW_ERROR("\n[!ERROR!] The max is the less or equal to the min", moonPhase(MoonPhaseBranches::MAX));
       }
       if (to_number(input) > 8)
       {
         THROW_ERROR("\n[!ERROR!] The max cannot be more than 8!", moonPhase(MoonPhaseBranches::MAX));
       }
-      else
+      else {
+        branch = MoonPhaseBranches::ALL;
         Entity.MoonPhase.max = to_number(input);
+      }
     }
   }
   
@@ -576,13 +581,13 @@ int Generator::moonPhase(MoonPhaseBranches branch)
     if (input.empty())
       Entity.MoonPhase.except = 0;
     else {
-      if (to_number(input) < Entity.MoonPhase.except)
+      if ((to_number(input) < Entity.MoonPhase.min) || (to_number(input) > Entity.MoonPhase.max))
       {
-        THROW_ERROR("\n[!ERROR!] The max is the less than the min", moonPhase(MoonPhaseBranches::EXCEPT));
+        THROW_ERROR("\n[!ERROR!] The except is not within the range of min and max!", moonPhase(MoonPhaseBranches::EXCEPT));
       }
-      if (to_number(input) > 8)
+      if (to_number(input) > 8 || to_number(input) < 1)
       {
-        THROW_ERROR("\n[!ERROR!] The max cannot be more than 8!", moonPhase(MoonPhaseBranches::EXCEPT));
+        THROW_ERROR("\n[!ERROR!] The except cannot be more than 8 or less than 1!", moonPhase(MoonPhaseBranches::EXCEPT));
       }
       else {
         Entity.MoonPhase.except = to_number(input);
@@ -711,19 +716,17 @@ int Generator::biome()
     Entity.Biome.name = inputLowercase;
     return -1;
   }
-
-
-  if (isValidBiome(inputLowercase)) {
-    Entity.Biome.isTag = false;
-
-    if (how_many(input, ':') == 0)
-      inputLowercase.insert(0, "minecraft:");
-
-    Entity.Biome.name = inputLowercase;
+  if (how_many(input, ':') == 0) {
+    if (!isValidBiome(inputLowercase)) {
+      THROW_ERROR("\n[!ERROR!] not a valid biome!", biome());
+    }
   }
-  else {
-    THROW_ERROR("\n[!ERROR!] not a valid biome!", biome());
-  }
+  Entity.Biome.isTag = false;
+
+  if (how_many(input, ':') == 0)
+    inputLowercase.insert(0, "minecraft:");
+
+  Entity.Biome.name = inputLowercase;
   return 0;
 }
 
@@ -760,7 +763,7 @@ int Generator::summonFunction()
   if ((keyword == "execute") && 
     ((input.find("execute at @s") != string::npos) || (input.find("execute as @s") != string::npos)))
   {
-    THROW_WARNING("[!WARNING!] It is unnecesary to execute 'at @s' or 'as @s' \nthe function already executes as it and at it!");
+    THROW_WARNING("\n[!WARNING!] It is unnecesary to execute 'at @s' or 'as @s' \nthe function already executes as it and at it!");
   }
 
 
@@ -770,7 +773,7 @@ int Generator::summonFunction()
 
 int Generator::baseEntity()
 {
-  const char* tell = "\nBase entity I register to zombie (to use zombies spawning conditions) but I want to spawn cows \nMy first input will be zombie and this input will be cow (STRING) ";
+  const char* tell = "\nBase entity (For example if my first input was zombie(to use zombies spawning conditions) but I want the custom mob to be a cow, this input will be cow) (STRING) : ";
   cnsl::print_colored_reset(tell, ConsoleColorAttributes::Cyan_FG);
   getInput();
   if (input.empty())
@@ -781,8 +784,8 @@ int Generator::baseEntity()
   {
     THROW_ERROR("\n[!ERROR!] Invalid Entity!", baseEntity());
   }
-
-  Entity.BaseEntity = inputLowercase;
+  if(inputLowercase != Entity.Registry)
+    Entity.BaseEntity = inputLowercase;
   return 0;
 }
 
@@ -801,6 +804,36 @@ int Generator::NBT()
   }
   Entity.NBT = input;
   return 0;
+}
+
+int Generator::dimension() {
+    print_colored_reset("\nDimension: ", ConsoleColorAttributes::Cyan_FG);
+    getInput();
+    if (input.empty()) {
+      return -1;
+    }
+
+    if (inputLowercase[0] == '#') {
+      Entity.Dimension.isTag = true;
+
+      if (how_many(input, ':') == 0)
+        inputLowercase.insert(1, "minecraft:");
+
+      Entity.Dimension.name = inputLowercase;
+      return -1;
+    }
+    if (how_many(input, ':') == 0) {
+      if (!isValidDimension(inputLowercase)) {
+        THROW_ERROR("\n[!ERROR!] not a valid dimension!", dimension());
+      }
+    }
+    Entity.Dimension.isTag = false;
+
+    if (how_many(input, ':') == 0)
+      inputLowercase.insert(0, "minecraft:");
+
+    Entity.Dimension.name = inputLowercase;
+    return 0;
 }
 
 int Generator::FstatIncreases()
@@ -827,14 +860,14 @@ int Generator::FstatIncreases()
   if (inputLowercase == "d") {
     stat_increases& e = Entity.StatIncreases;
     e.hasFStats = -1;
-    e.P_Damage = { 0, 15, 1000 };
-    e.P_Health = { 0, 15, 1500 };
-    e.P_Armor = { 0, 0 , 0 };
-    e.P_ArmorToughness = { 0, 0 , 0 };
-    e.P_Attack_Speed = { 0, 0 , 0 };
-    e.P_KnockBack = { 0, 0 , 0 };
-    e.P_Speed = { 0, 15 , 500 };
-    e.P_FollowRange = { 0, 0 , 0 };
+    //e.P_Damage = { 0, 15, 1000 };
+    //e.P_Health = { 0, 15, 1500 };
+    //e.P_Armor = { 0, 0 , 0 };
+    //e.P_ArmorToughness = { 0, 0 , 0 };
+    //e.P_Attack_Speed = { 0, 0 , 0 };
+    //e.P_KnockBack = { 0, 0 , 0 };
+    //e.P_Speed = { 0, 15 , 500 };
+    //e.P_FollowRange = { 0, 0 , 0 };
 
     e.F_Damage = { 0, 0, 0 };
     e.F_Health = { 0, 0, 0 };

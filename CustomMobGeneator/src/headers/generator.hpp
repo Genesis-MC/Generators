@@ -52,6 +52,7 @@ private:
   int summonFunction();
   int baseEntity();
   int NBT();
+  int dimension();
 
   int FstatIncreases();
   int PstatIncreases();
