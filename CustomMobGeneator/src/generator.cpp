@@ -32,6 +32,9 @@ void getInput()
 
 void Generator::start()
 {
+  entity resetter;
+  Entity = resetter;
+
   registry();
   name();
   weight();
@@ -46,6 +49,7 @@ void Generator::start()
     block();
     biome();
     dimension();
+    weather();
   }
   cnsl::print_colored_reset("\nStat Increases are binomialy distributed and are inputted as three whole numbers sepreated by a comma like this\n N,P,B where N is the amount of tries\nP is the chance of success and B is the value increase for each success\nNOTE THAT THE INPUTS ARE WHOLE NUMBERS AND 'B' IS DIVIDED BY 100 IN THE END SO WHEN YOU INPUT 1 \nIT WILL BE 0.01 NOT 1 SO BE SURE TO INPUT IT MULTIPLIED BY 100 (will fix)",ConsoleColorAttributes::Yellow_FG);
   FstatIncreases();
@@ -80,7 +84,10 @@ void Generator::start()
 
     getInput();
     if (input == "y" || input == "Y")
+    {
+      cnsl::clear();
       start();
+    }
     else
       break;
   }
@@ -190,9 +197,7 @@ void Generator::printCommand()
         }
 
         if (e.MoonPhase.on_even_days) {
-          cmd += ",on_even_days:";
-          cmd += std::to_string(e.MoonPhase.on_even_days);
-          cmd += "b";
+          cmd += ",on_even_days:1b";
         }
 
         if (e.MoonPhase.on_odd_days) {
@@ -200,7 +205,7 @@ void Generator::printCommand()
         }
 
         if (e.MoonPhase.on_prime_days) {
-          cmd += "on_prime_days:1b";
+          cmd += ",on_prime_days:1b";
         }
 
         if (e.MoonPhase.blood_moon) {
@@ -235,6 +240,19 @@ void Generator::printCommand()
 
       if (e.Biome.isTag)
         cmd += ",biomeTag:1b";
+    }
+
+    if (e.Weather) {
+      cmd += ",weather:{";
+      if (!e.Weather.raining.empty()) {
+        cmd += ",";
+        cmd += Entity.Weather.raining;
+      }
+      if (!e.Weather.thundering.empty()) {
+        cmd += ",";
+        cmd += Entity.Weather.thundering;
+      }
+      cmd += '}';
     }
 
     cmd += "}";
@@ -304,13 +322,22 @@ void Generator::printCommand()
 
     cmd += "}";
   }
-
+  if (!e.SummonFuncion.empty()) {
+    cmd += ",summon_function:\"";
+    cmd += e.SummonFuncion;
+    cmd += "\"";
+  }
 
   if (!e.NBT.empty() && e.NBT != "{}") {
     cmd += ",entity_data:";
     cmd += e.NBT;
   }
   cmd += "}";
+  
+  
+  if (cmd.find(",requirements:{}") != string::npos) {
+    cmd.erase(cmd.find(",requirements:{}"), 16);
+  }
   while (cmd.find(",}") != string::npos) {
     int pos = cmd.find(",}");
     cmd[pos - 1] = '}';
@@ -462,7 +489,6 @@ int Generator::level(LevelBranches branch)
   getInput();
     if (input.empty())
     {
-      Entity.hasRequirements = false;
       return -1;
     }
     if (input[0] != 'Y' && input[0] != 'y')
@@ -581,7 +607,11 @@ int Generator::moonPhase(MoonPhaseBranches branch)
     if (input.empty())
       Entity.MoonPhase.except = 0;
     else {
-      if ((to_number(input) < Entity.MoonPhase.min) || (to_number(input) > Entity.MoonPhase.max))
+      if (Entity.MoonPhase.min && (to_number(input) < Entity.MoonPhase.min)) 
+      {
+        THROW_ERROR("\n[!ERROR!] The except is not within the range of min and max!", moonPhase(MoonPhaseBranches::EXCEPT));
+      }
+      if (Entity.MoonPhase.max && (to_number(input) > Entity.MoonPhase.max))
       {
         THROW_ERROR("\n[!ERROR!] The except is not within the range of min and max!", moonPhase(MoonPhaseBranches::EXCEPT));
       }
@@ -752,7 +782,7 @@ int Generator::summonFunction()
       keyword += i;
   }
 
-  if (isValidCommand(keyword) == false) {
+  if (!isValidCommand(keyword)) {
     THROW_ERROR("\n[!ERROR!] Not a valid command!",summonFunction());
   }
 
@@ -767,7 +797,7 @@ int Generator::summonFunction()
   }
 
 
-  Entity.SummonFuncion = keyword;
+  Entity.SummonFuncion = input;
   return 0;
 }
 
@@ -836,6 +866,51 @@ int Generator::dimension() {
     return 0;
 }
 
+int Generator::weather() {
+  print_colored_reset("\nWeather (Raining or Thundering are inputs type '!' before the word \nto indicate it must NOT be that): ", ConsoleColorAttributes::Cyan_FG);
+  print_colored_reset("\nEx input is !raining,!thundering means must not be thundering and raining: ", ConsoleColorAttributes::Cyan_FG);
+
+  getInput();
+  if (input.empty()) {
+    return -1;
+  }
+  int i = 0;
+  std::string keyword[2];
+  for (char c : inputLowercase)
+  {
+    if (c == ',')
+      i++;
+    else if (c != ' ') {
+      keyword[i] += c;
+    }
+  }
+  for (int j = 0; j <= i; j++) {
+    if (keyword[j] != "!raining" && keyword[j] != "!thundering" && keyword[j] != "raining" && keyword[j] != "thundering")
+    {
+      std::string s = "\n[!ERROR!] '";
+      s += inputLowercase;
+      s += "'";
+      s += " is not a valid weather input!";
+      THROW_ERROR(s.c_str(), weather());
+    }
+  }
+  for (int j = 0; j <= i; j++) {
+    if (keyword[j] == "raining") {
+      Entity.Weather.raining = "raining:1b";
+    }
+    if (keyword[j] == "!raining") {
+      Entity.Weather.raining = "raining:0b";
+    }
+    if (keyword[j] == "thundering") {
+      Entity.Weather.thundering = "thundering:1b";
+    }
+    if (keyword[j] == "!thundering") {
+      Entity.Weather.thundering = "thundering:0b";
+    }
+  }
+  return 0;
+}
+
 int Generator::FstatIncreases()
 {
   const char* tell = "\nFlat Stat Increases? (D = Default increases | Y for customizing | enter to skip ) ";
@@ -896,7 +971,7 @@ int Generator::PstatIncreases()
   if (input.empty())
   {
     stat_increases& e = Entity.StatIncreases;
-    e.hasPStats = false;
+    e.hasPStats = 0;
     e.P_Damage = { 0, 0, 0 };
     e.P_Health = { 0, 0, 0 };
     e.P_Armor = { 0, 0, 0 };

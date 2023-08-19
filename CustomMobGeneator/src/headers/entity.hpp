@@ -119,6 +119,14 @@ struct min_max {
 };
 
 
+struct weather {
+  std::string raining;
+  std::string thundering;
+  operator bool() {
+    return !raining.empty() || !thundering.empty();
+  }
+};
+
 
 struct entity {
   std::string Registry;
@@ -137,13 +145,11 @@ struct entity {
   type_tag Block;
   type_tag Dimension;
   type_tag Biome;
-  
+  weather Weather;
   bool hasRequirements = false;
   bool hasMoonPhase = false;
   bool hasLevel = false;
   bool hasBlock = false;
   bool hasBiome = false;
   bool hasDimension = false;
-
 };
-

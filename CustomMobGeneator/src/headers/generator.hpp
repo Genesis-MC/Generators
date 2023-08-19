@@ -54,6 +54,8 @@ private:
   int NBT();
   int dimension();
 
+  int weather();
+
   int FstatIncreases();
   int PstatIncreases();
 
