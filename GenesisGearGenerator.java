@@ -127,7 +127,7 @@ class GenesisGearGenerator
         //FORMATTING CUSTOM STATS AND CHECKING IF CERTAIN GROUPS OF STATS EXIST
         for(int i = 0; i<13; i++)
         {
-            if(stats[i] > 0)
+            if(stats[i] != 0)
             {
                 output += statVal[i] + ":" + stats[i] + ",";
             }
