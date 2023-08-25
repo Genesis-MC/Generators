@@ -63,6 +63,7 @@ class GenesisGearGenerator
     {
         //NAME
         String name;
+        String itemType;
         String color;
         boolean italic;
         boolean bold;
@@ -84,6 +85,8 @@ class GenesisGearGenerator
         //INPUT ITEM NAME REQ
         System.out.print("Item Name: ");
         name = scanner.nextLine();
+        System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
+        itemType = scanner.nextLine();
         System.out.print("\nColor (Please enter valid color code or Hexcode): ");
         color = scanner.nextLine();
         System.out.print("\nItalic (true/false): ");
@@ -92,7 +95,7 @@ class GenesisGearGenerator
         bold = scanner.nextBoolean();
         System.out.print("\nUnderlined (true/false): ");
         underlined = scanner.nextBoolean();
-        output += name + "\\\",stat:{";
+        output += name + "\\\",type:\\\"" + itemType + "\\\",stat:{";
 
         //INPUT CUSTOM STATS
         System.out.print("Input item slot as an integer (Mainhand = 1; Helmet = 2; Chestplate = 3; Leggings = 4; Boots = 5): ");
@@ -148,7 +151,7 @@ class GenesisGearGenerator
             //if weapon
             output += "}},AttributeModifiers:[{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.mainhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\\\"mainhand\\\"},{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.offhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\\\"offhand\\\"";
         }
-        output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner) + ",'{\\\"translate\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
+        output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner,itemType) + ",'{\\\"translate\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
 
         //FORMATTING CUSTOM GLYPHS AND BORDERS FOR LORE
         int count = 0;
@@ -208,6 +211,37 @@ class GenesisGearGenerator
         rarity = scanner.nextLine();
         System.out.print("\nItem Type (Ingredient, Mineral, etc): ");
         itemType = scanner.nextLine();
+        output += rarity + " " + itemType + "\\\",\\\"font\\\":\\\"minecraft:default\\\",\\\"color\\\":\\\"";
+
+        if(rarity.equals("Common"))
+            output += "white\\\",\\\"italic\\\":false}]'";
+        else if(rarity.equals("Uncommon"))
+            output += "aqua\\\",\\\"italic\\\":false}]'";
+        else if(rarity.equals("Rare"))
+            output += "yellow\\\",\\\"italic\\\":false}]'";
+        else if(rarity.equals("Epic"))
+            output += "light_purple\\\",\\\"italic\\\":false}]'";
+        else if(rarity.equals("Legendary"))
+            output += "#3b2b06\\\",\\\"italic\\\":false}]'";
+        else if(rarity.equals("Mythical"))
+            output += "#211905\\\",\\\"italic\\\":false}]'";
+        else
+            output += "#403303\\\",\\\"italic\\\":false}]'";
+
+        return output;
+    }
+
+    private String rarityAndType(Scanner scanner, String type)
+    {
+
+        String rarity;
+        String itemType = type;
+
+        String output = "'[{\\\"translate\\\":\\\"A\\\",\\\"font\\\":\\\"genesis:icon\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false},{\\\"translate\\\":\\\"";
+        scanner.nextLine();
+        //LORE
+        System.out.print("\nRarity (Common, Uncommon, Rare, etc): ");
+        rarity = scanner.nextLine();
         output += rarity + " " + itemType + "\\\",\\\"font\\\":\\\"minecraft:default\\\",\\\"color\\\":\\\"";
 
         if(rarity.equals("Common"))
