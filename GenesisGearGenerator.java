@@ -154,10 +154,11 @@ class GenesisGearGenerator
         int count = 0;
         for(int i = 0; i<13; i++)
         {
-            if(stats[i] != 0)
+            if(stats[i] > 0)
             {
                 count++;
                 output += "{\\\"translate\\\":\\\"genesis.stats.wrapper." + statVal[i] + "." + getLen(stats[i]) + "\\\",\\\"with\\\":[" + stats[i] + "]},";
+                stats[i] = 0;
                 if(count > 5)
                 {
                     count = 0;
@@ -165,7 +166,21 @@ class GenesisGearGenerator
                     output += "]}','{\\\"translate\\\":\\\"\\\"}','{\\\"translate\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
                 }
             }
-
+        }
+        for(int i = 0; i<13; i++)
+        {
+            if(stats[i] < 0)
+            {
+                count++;
+                output += "{\\\"translate\\\":\\\"genesis.stats.wrapper." + statVal[i] + "." + getLen(stats[i]) + "\\\",\\\"with\\\":[" + stats[i] + "],\\\"color\\\":\\\"red\\\"},";
+                stats[i] = 0;
+                if(count > 5)
+                {
+                    count = 0;
+                    output = output.substring(0,output.length()-1);
+                    output += "]}','{\\\"translate\\\":\\\"\\\"}','{\\\"translate\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
+                }
+            }
         }
         if(output.substring(output.length()-1).equals(","))
             output = output.substring(0,output.length()-1);
