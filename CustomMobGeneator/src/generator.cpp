@@ -1,4 +1,7 @@
 #include "headers/generator.hpp"
+#include <fstream> // f this stream lib
+#include <sstream>
+//#include <filesystem>
 
 // cs student moment
 // kill me
@@ -34,7 +37,6 @@ void Generator::start()
 {
   entity resetter;
   Entity = resetter;
-
   registry();
   name();
   weight();
@@ -42,8 +44,9 @@ void Generator::start()
   baseEntity();
   requirements();
 
-  if (this->Entity.hasRequirements)
+  if (Entity.hasRequirements)
   {
+    
     level();
     moonPhase();
     block();
@@ -162,11 +165,11 @@ void Generator::printCommand()
       cmd += ",level:{";
       if (e.Level.min) {
         cmd += ",min:";
-        cmd += to_string(e.Level.min);
+        cmd += std::to_string(e.Level.min);
       }
       if (e.Level.max) {
         cmd += ",max:";
-        cmd += to_string(e.Level.max);
+        cmd += std::to_string(e.Level.max);
       }
       cmd += "}";
     }
@@ -233,13 +236,23 @@ void Generator::printCommand()
         cmd += ",dimensionTag:1b";
     }
 
-    if (!e.Biome.name.empty()) {
-      cmd += ",biome:\"";
-      cmd += Entity.Biome.name;
-      cmd += '"';
-
-      if (e.Biome.isTag)
-        cmd += ",biomeTag:1b";
+    if (!e.Biomes.empty()) {
+        cmd += ",biomes:[";
+        int result = 0;
+        //for (auto& biome : e.Biomes) {
+        //    result = 0;
+        //    int i = 0;
+        //    for (auto c : biome) {
+        //        result += c + i++;
+        //    }
+        //    cmd += std::to_string(result) + ",";
+        //}
+        for (const auto& biome : e.Biomes) {
+            cmd += '"';
+            cmd += biome;
+            cmd += "\",";
+        }
+        cmd += "],biomes_search_key:1b";
     }
 
     if (e.Weather) {
@@ -339,14 +352,23 @@ void Generator::printCommand()
     cmd.erase(cmd.find(",requirements:{}"), 16);
   }
   while (cmd.find(",}") != string::npos) {
-    int pos = cmd.find(",}");
-    cmd[pos - 1] = '}';
+    size_t pos = cmd.find(",}");
     cmd.erase(pos,1);
   }
 
   while (cmd.find("{,") != string::npos) {
-    int pos = cmd.find("{,");
+    size_t pos = cmd.find("{,");
     cmd.erase(pos+1, 1);
+  }
+
+  while (cmd.find(",]") != string::npos) {
+      size_t pos = cmd.find(",]");
+      cmd.erase(pos, 1);
+  }
+
+  while (cmd.find("[,") != string::npos) {
+      size_t pos = cmd.find("[,");
+      cmd.erase(pos + 1, 1);
   }
   cout << cmd;
 }
@@ -731,32 +753,75 @@ int Generator::block()
 
 int Generator::biome()
 {
+    const char* howToUse = R"(
+    Biome Requirements you can type #namespace:file to type a tag (group)
+    you can seperate multiple things by commas ex
+    #minecraft:is_nether,minecraft:desert,#namespace:file
+    but you can also not type the namespace and it will auto assume you mean the minecraft namespace
+    ex: #is_nether,desert,#namespace:file
+)";
+  print_colored_reset(howToUse, ConsoleColorAttributes::Cyan_FG);
   print_colored_reset("\nBiome: ", ConsoleColorAttributes::Cyan_FG);
   getInput();
   if (input.empty()) {
     return -1;
   }
+  std::vector<std::string> words;
+  inputLowercase += ",";
 
-  if (inputLowercase[0] == '#') {
-    Entity.Biome.isTag = true;
-
-    if (how_many(input, ':') == 0)
-      inputLowercase.insert(1, "minecraft:");
-
-    Entity.Biome.name = inputLowercase;
-    return -1;
+  while (inputLowercase.find(" ") != string::npos) {
+      size_t pos = inputLowercase.find(" ");
+      //cmd[pos - 1] = '}';
+      inputLowercase.erase(pos, 1);
   }
-  if (how_many(input, ':') == 0) {
-    if (!isValidBiome(inputLowercase)) {
-      THROW_ERROR("\n[!ERROR!] not a valid biome!", biome());
-    }
+
+  while (inputLowercase.find(",,") != string::npos) {
+      size_t pos = inputLowercase.find(",,");
+      //cmd[pos - 1] = '}';
+      inputLowercase.erase(pos, 1);
   }
-  Entity.Biome.isTag = false;
+  std::string keyword = "";
+  for (auto c : inputLowercase) {
+      if (c == ',') {
+          if (!keyword.empty()) {
+              if (sutils::how_many(keyword, ':') != 1) {
+                  bool isTag = keyword[0] == '#';
+                  keyword.insert(isTag,"minecraft:");
+              }
+              words.push_back(keyword);
+          }
+          keyword = "";
+      }
+      else { 
+          keyword += c;
+      }
+  }
+  
+  
 
-  if (how_many(input, ':') == 0)
-    inputLowercase.insert(0, "minecraft:");
+  for (auto& word : words) {
+      if (word[0] == '#') {
+          locateBiomeTag(word);
+      }
+      else {
+          Entity.Biomes.insert(std::string("\"") + word + "\"");
+      }
+  }
+  for (auto& biome : Entity.Biomes) {
+      //std::cout << biome.substr(1, 9);
+      if (biome.find("minecraft:") != string::npos) {
+          if (!isValidBiome(biome.substr(biome.find("minecraft:") + 10))) {
+              cnsl::print_colored_reset("\n[!ERROR!] --> ", ConsoleColorAttributes::Red_FG);
+              cnsl::print_colored_reset((biome.substr(biome.find("minecraft:") + 10,biome.length()-11)), ConsoleColorAttributes::Blue_FG);
+              cnsl::print_colored_reset(" <-- Is not a valid biome.", ConsoleColorAttributes::Red_FG);
 
-  Entity.Biome.name = inputLowercase;
+              Entity.Biomes.clear();
+              Generator::biome();
+              return -1;
+          }
+      }
+      //std::cout << "\n" << biome;
+  }
   return 0;
 }
 
@@ -821,16 +886,24 @@ int Generator::baseEntity()
 
 int Generator::NBT()
 {
-  const char* tell = "\nEntity Data or NBT (must be in brackets or press enter to skip) ";
+  const char* tell = "\nEntity Data or NBT (must be in brackets {}) ";
   cnsl::print_colored_reset(tell, ConsoleColorAttributes::Cyan_FG);
   getInput();
-  if (input.empty())
+  if (input.empty() || input == "{}")
   {
-    return -1;
+      THROW_ERROR("\n[!ERROR!] Each Entity must atleast some NBT!", NBT());
   }
-  if ((input[0] != '{' && input[input.length() - 1] != '}' )|| input.length() <= 1)
+  if (input[0] != '{' && input[input.length() - 1] != '}' )
   {
     THROW_ERROR("\n[!ERROR!] The NBT must be in brackets!", NBT());
+  }
+  
+  if (input.find("Passenger") != string::npos)
+  {
+      THROW_ERROR("\n[!ERROR!] The 'Passenger' NBT cannot be processed by the system \
+          \nif you want to spawn passengers make a summon function \
+          \n that kills the entity and summons the entity with the passenger \
+          \n Sorry this is a limitation of Minecraft!", NBT());
   }
   Entity.NBT = input;
   return 0;
@@ -854,6 +927,11 @@ int Generator::dimension() {
     }
     if (how_many(input, ':') == 0) {
       if (!isValidDimension(inputLowercase)) {
+          cnsl::print_colored_reset("[!INFO!] the choices are ",ConsoleColorAttributes::Magenta_FG);
+
+          for (auto& dim : DimensionList) {
+              cnsl::print_colored_reset(dim + ",", ConsoleColorAttributes::Magenta_FG);
+          }
         THROW_ERROR("\n[!ERROR!] not a valid dimension!", dimension());
       }
     }
@@ -999,6 +1077,7 @@ int Generator::PstatIncreases()
   }
 
   if (inputLowercase == "y") {
+    THROW_WARNING("\n[!WARNING!] your Entity may not scale as the same as Genesis Mobs!");
     Entity.StatIncreases.hasPStats = 1;
     return -1;
   }
@@ -1034,6 +1113,78 @@ int Generator::statIncreases(const char* msg, int* ptr)
 }
 
 
+static std::unordered_set<std::string> alreadySearched;
+int Generator::locateBiomeTag(string& word) {
+    word.erase(0, 1);
+    //std::filesystem::path path = "src\\biome_tags";
+    std::string path = R"(biome_tags)";
+    while (word.find(":") != string::npos) {
+        size_t pos = word.find(":");
+        word[pos] = '\\';
+    }
 
+    std::string filePath = (path + "\\" + word + ".json");
+    //filePath 
+    //std::ifstream ifile(filePath.c_str());
+    std::ifstream ifile("./biome_tags\\minecraft\\all.json");
+    if (ifile) {
+        std::string str = "";
 
+        std::ostringstream ss;
+        ss << ifile.rdbuf(); // reading data
+        str = ss.str();
+
+        while (str.find(" ") != string::npos)
+            str.erase(str.find(" "), 1);
+
+        while (str.find("\n") != string::npos)
+            str.erase(str.find("\n"), 1);
+
+        while (str.find("\t") != string::npos)
+            str.erase(str.find("\t"), 1);
+
+        while (str.find("\"") != string::npos)
+            str.erase(str.find("\""), 1);
+
+        while (str.find("{id:") != string::npos)
+            str.erase(str.find("{id:"), 4);
+
+        while (str.find(",required:") != string::npos)
+            str.erase(str.find(",required:"), 10);
+
+        while (str.find("false}") != string::npos)
+            str.erase(str.find("false}"), 6);
+        
+        //std::cout << str;
+        /*
+        MOST CURSED WAY TO READ JSON FILE
+        LOL TOO LAZY TO INSTALL A LIB
+
+        */
+        size_t valuesPos = str.find("{values:[");
+        std::string keyword = "";
+        for (char character : str.substr(valuesPos + 9)) {
+            if (character == ',' || character == ']') {
+                if (keyword[0] == '#' && alreadySearched.find(keyword) != alreadySearched.end()) {
+                    alreadySearched.insert(keyword);
+                    locateBiomeTag(keyword);
+                    keyword = "";
+                }
+                if (keyword[0] != '#') {
+                    Entity.Biomes.insert(keyword);
+                }
+                keyword = "";
+                
+            }
+            else {
+                keyword += character;
+            }
+        }
+    }
+    else {
+        THROW_ERROR(std::string("\n[!ERROR!] ") + filePath + " file does not exist or mistyped file path", Generator::biome());
+    }
+    ifile.close();
+    return 0;
+}
 

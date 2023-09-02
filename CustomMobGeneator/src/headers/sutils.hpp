@@ -64,7 +64,7 @@ namespace sutils {
 	bool flag;
 	for (int i = 0; i < input.size(); ++i) {
 	  flag = false;
-	  if (input[i] >= '0' && input[i] <= '9' || input[0] == '-')
+	  if ((input[i] >= '0' && input[i] <= '9' ) || input[0] == '-')
 		flag = true;
 	  if (!flag)
 		return false;
@@ -77,7 +77,7 @@ namespace sutils {
 	bool flag;
 	for (int i = 0; i < input.size(); ++i) {
 	  flag = false;
-	  if (input[i] >= '0' && input[i] <= '9' || input[0] == '-' || input[i] == '.')
+	  if ((input[i] >= '0' && input[i] <= '9') || input[0] == '-' || input[i] == '.')
 		flag = true;
 	  if (!flag)
 		return false;
@@ -85,52 +85,57 @@ namespace sutils {
 	return true;
   }
   inline bool find_char(const std::string& String, const char Char) {
-	for (int i = 0; i < String.size(); ++i)
-	  if (String[i] == Char)
+	for (auto c : String)
+	  if (c == Char)
 		return true;
 	return false;
   }
   inline int how_many(const std::string& string, char charToCount) {
 	int count = 0;
-	for (int i = 0; i < string.length(); i++)
-	  if (string[i] == charToCount)
+	for (auto c : string)
+	  if (c == charToCount)
 		count++;
 	return count;
   }
   inline bool contains(const std::string& string, char charToFind) {
-	for (int i = 0; i < string.length(); i++)
-	  if (string[i] == charToFind)
+	for (auto c :string)
+	  if (c == charToFind)
 		return true;
 	return false;
   }
   inline int is_lowercase(const std::string& string) {
-	for (int i = 0; i < string.length(); i++)
-	  if (string[i] < 'a' || string[i] > 'z')
+	for (auto c : string)
+	  if (c < 'a' || c > 'z')
 		return false;
 	return true;
   }
   inline bool contains_a_number(const std::string& string) {
-	for (int i = 0; i < string.length(); i++)
-	  if (string[i] >= '0' && string[i] <= '9')
-		return true;
+	  for (auto c : string)
+		  if (c >= '0' && c <= '9')
+			  return true;
 	return false;
   }
   inline int is_uppercase(const std::string& string) {
-	for (int i = 0; i < string.length(); i++)
-	  if (string[i] < 'A' || string[i] > 'Z')
+	for (auto c : string)
+	  if (c < 'A' || c > 'Z')
 		return false;
 	return true;
   }
   inline int has_uppercase_letter(const std::string& string) {
-	for (int i = 0; i < string.length(); i++)
-	  if (string[i] >= 'A' && string[i] <= 'Z')
+	for (auto c : string)
+	  if (c >= 'A' && c <= 'Z')
 		return true;
 	return false;
   }
   inline int has_lowercase_letter(const std::string& string) {
-	for (int i = 0; i < string.length(); i++)
-	  if (string[i] >= 'a' && string[i] <= 'z')
+	for (auto c : string)
+	  if (c >= 'a' && c <= 'z')
 		return true;
 	return false;
   }
+
+  //inline double close_to(const std::string& input, const std::string& close_to_what) {
+	//  for (auto c : input) {
+	//  }
+  //}
 }

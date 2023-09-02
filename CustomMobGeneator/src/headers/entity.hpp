@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <vector>
+#include <unordered_set>
 
 struct binomial {
   int n = 0;
@@ -144,7 +146,7 @@ struct entity {
   moon_phase MoonPhase;
   type_tag Block;
   type_tag Dimension;
-  type_tag Biome;
+  std::unordered_set<std::string> Biomes;
   weather Weather;
   bool hasRequirements = false;
   bool hasMoonPhase = false;

@@ -10,10 +10,9 @@ const char* HowToUse = R"(
 HOW TO USE
 Press The `Enter` Key to skip something
 this system treats everything as lowercase except technical name
-Warnings are suggestions
-Errors are errors you should follow what they say
-Put a hash tag '#' before biome requirements or dimension or block requirements and you will get a biome tag 
-(requires some manual stuff first to work)
+Warnings are suggestions you should really follow them
+Errors show how bad you are at making entities :skull:
+Put a '#' before biome requirements or dimension or block requirements and you will get a tag (group)
 Skipping is better than specifying anything as false
 )";
 int main()

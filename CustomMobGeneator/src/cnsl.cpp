@@ -5,16 +5,16 @@ namespace cnsl {
     void clear() {
         system("cls");
     }
-    void print_colored(const char* x, ConsoleColorAttributes Color) {
+    void print_colored(const std::string& x, ConsoleColorAttributes Color) {
         SetConsoleTextAttribute(hConsole, Color);
         std::cout << x;
     }
-    void print_colored_reset(const char* x, ConsoleColorAttributes Color) {
+    void print_colored_reset(const std::string& x, ConsoleColorAttributes Color) {
         SetConsoleTextAttribute(hConsole, Color);
         std::cout << x;
         reset_color();
     }
-    void print_newline_colored_reset(const char* x, ConsoleColorAttributes Color) {
+    void print_newline_colored_reset(const std::string& x, ConsoleColorAttributes Color) {
       SetConsoleTextAttribute(hConsole, Color);
       std::cout << x << '\n';
       reset_color();
@@ -31,14 +31,14 @@ namespace cnsl {
     void clear() {
         system("clear");
     }
-    void print_colored(const char* x, ConsoleColorAttributes Color) {
+    void print_colored(const std::string& x, ConsoleColorAttributes Color) {
         std::cout << "\033[" << Color << 'm' << x;
     }
-    void print_colored_reset(const char* x, ConsoleColorAttributes Color) {
+    void print_colored_reset(const std::string& x, ConsoleColorAttributes Color) {
         std::cout << "\033[" << Color << 'm' << x;
         reset_color();
     }
-    void print_newline_colored_reset(const char* x, ConsoleColorAttributes Color) {
+    void print_newline_colored_reset(const std::string& x, ConsoleColorAttributes Color) {
       SetConsoleTextAttribute(hConsole, Color);
       std::cout << "\033[" << Color << 'm' << x << '\n';
       reset_color();

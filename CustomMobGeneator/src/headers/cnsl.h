@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <iostream>
 #ifndef _WIN32
 #define _WIN32 0
@@ -159,9 +160,9 @@ enum ConsoleColorAttributes {
 
 namespace cnsl {
     void clear();
-    void print_colored(const char* x, ConsoleColorAttributes Color);
-    void print_colored_reset(const char* x, ConsoleColorAttributes Color);
-    void print_newline_colored_reset(const char* x, ConsoleColorAttributes Color);
+    void print_colored(const std::string& x, ConsoleColorAttributes Color);
+    void print_colored_reset(const std::string& x, ConsoleColorAttributes Color);
+    void print_newline_colored_reset(const std::string& x, ConsoleColorAttributes Color);
     void color(ConsoleColorAttributes Color);
     void reset_color();
 }
