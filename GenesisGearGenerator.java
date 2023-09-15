@@ -17,9 +17,9 @@ class GenesisGearGenerator
         scanner.nextLine();
         System.out.println("===================================================================================");
         if(choice == 1)
-            System.out.print("\n{" + outputItem(scanner) + ",HideFlags:131}");
+            System.out.print("\n{" + outputItem(scanner) + ",HideFlags:195}");
         else
-            System.out.print("\n{" + outputGear(scanner) + ",HideFlags:131}");
+            System.out.print("\n{" + outputGear(scanner) + ",HideFlags:195}");
         scanner.close();
     }
 
@@ -149,7 +149,8 @@ class GenesisGearGenerator
         else
         {
             //if weapon
-            output += "}},AttributeModifiers:[{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.mainhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\\\"mainhand\\\"},{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.offhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\\\"offhand\\\"";
+            output += "}},AttributeModifiers:[{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.mainhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\\\"mainhand\\\"";
+            //Add this for offhand weapon calculations: },{AttributeName:\\\"minecraft:generic.luck\\\",Name:\\\"tungsten.offhand\\\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,11],Slot:\\\"offhand\\\"
         }
         output += "}],display:{" + itemName(name, color, italic, bold, underlined) + "Lore:[" + rarityAndType(scanner,itemType) + ",'{\\\"translate\\\":\\\"\\\",\\\"font\\\":\\\"genesis:stats\\\",\\\"color\\\":\\\"white\\\",\\\"italic\\\":false,\\\"extra\\\":[";
 
