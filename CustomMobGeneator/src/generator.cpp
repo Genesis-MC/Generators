@@ -1,11 +1,13 @@
 #include "headers/generator.hpp"
 #include <fstream> // f this stream lib
 #include <sstream>
-//#include <filesystem>
+#include <iomanip>
+//#include <filesystem> f gcc doesnt work :(((
 
 // cs student moment
 // kill me
 using namespace sutils;
+using namespace std::literals::string_literals;
 using std::cout,std::string,std::to_string;
 using cnsl::clear,cnsl::print_colored,cnsl::print_colored_reset;
 
@@ -26,17 +28,13 @@ constexpr ConsoleColorAttributes YELLOW_WARN = ConsoleColorAttributes::Yellow_FG
 void getInput()
 {
   std::getline(std::cin, input);
-  inputLowercase = input;
-  sutils::lowercase(inputLowercase);
-
-  inputUppercase = input;
-  sutils::uppercase(inputUppercase);
+  inputLowercase = sutils::lowercase(input);
+  inputUppercase = sutils::uppercase(input);
 }
 
-void Generator::start()
-{
+void Generator::start() {
   entity resetter;
-  Entity = resetter;
+  Entity = std::move(resetter);
   registry();
   name();
   weight();
@@ -91,8 +89,9 @@ void Generator::start()
       cnsl::clear();
       start();
     }
-    else
-      break;
+    else {
+        break;
+    }
   }
 }
 void Generator::print()
@@ -130,247 +129,235 @@ void Generator::print()
   //cnsl::print_colored_reset("\n}", ConsoleColorAttributes::Blue_FG);
 
 }
-void Generator::printCommand()
-{
-  entity& e = Entity;
-  using namespace std;
-  cnsl::color(ConsoleColorAttributes::Yellow_FG);
-  std::string cmd = "";
-  cout << "\n-----------------------------------------------\n";
-  cout << "The Command :\n";
-  cmd += "data modify storage gen:mobs registry.";
-  cmd += Entity.Registry;
-  cmd += " append value {name:\"";
-  cmd += Entity.Name + '"';
-  cmd += ",weight:";
-  cmd += to_string(Entity.Weight);
+void Generator::printCommand() {
+    entity& e = Entity;
+    using namespace std::literals;
+    cnsl::color(ConsoleColorAttributes::Yellow_FG);
+    std::string cmd = "";
+    cout << "\n-----------------------------------------------\n";
+    cout << "The Command:\n";
+    cmd += "data modify storage gen:mobs registry ";
+    cmd += "append value {use_spawning_conditions_of:\"";
+    cmd += Entity.Registry + "\"";
+    cmd += ",name:\"" + Entity.Name + "\"";
+    cmd += ",weight:";
+    cmd += to_string(Entity.Weight);
 
-  if (e.WeightLevelMultiplier) {
-    cmd += ",weight_level_multiplier:{v:";
-    cmd += to_string((int)(Entity.WeightLevelMultiplier * 100));
-    cmd += "}";
-  }
-
-  if (!e.BaseEntity.empty()) {
-    cmd += ",base_entity:\"";
-    cmd += Entity.BaseEntity;
-    cmd += '"';
-  }
-
-
-  if (e.hasRequirements) {
-    cmd += ",requirements:{";
-
-    if (e.Level) {
-      cmd += ",level:{";
-      if (e.Level.min) {
-        cmd += ",min:";
-        cmd += std::to_string(e.Level.min);
-      }
-      if (e.Level.max) {
-        cmd += ",max:";
-        cmd += std::to_string(e.Level.max);
-      }
-      cmd += "}";
-    }
-    if (e.MoonPhase) {
-      cmd += ",moon_phase:{";
-      if (e.MoonPhase.exact) {
-        cmd += ",exact:";
-        cmd += std::to_string(e.MoonPhase.exact);
-        cmd += "b,";
-      }
-      else {
-        if (e.MoonPhase.min) {
-          cmd += ",min:";
-          cmd += std::to_string(e.MoonPhase.min);
-          cmd += "b,";
-        }
-
-        if (e.MoonPhase.max) {
-          cmd += ",max:";
-          cmd += std::to_string(e.MoonPhase.max);
-          cmd += "b";
-        }
-
-        if (e.MoonPhase.except) {
-          cmd += ",except:";
-          cmd += std::to_string(e.MoonPhase.except);
-          cmd += "b";
-        }
-
-        if (e.MoonPhase.on_even_days) {
-          cmd += ",on_even_days:1b";
-        }
-
-        if (e.MoonPhase.on_odd_days) {
-          cmd += ",on_odd_days:1b";
-        }
-
-        if (e.MoonPhase.on_prime_days) {
-          cmd += ",on_prime_days:1b";
-        }
-
-        if (e.MoonPhase.blood_moon) {
-          cmd += ",blood_moon:1b";
-        }
-      }
-      cmd += "}";
+    if (e.WeightLevelMultiplier) {
+        cmd += ",weight_level_multiplier:{v:";
+        cmd += to_string((int) (Entity.WeightLevelMultiplier * 100));
+        cmd += "}";
     }
 
-    if (!e.Block.name.empty()) {
-      cmd += ",block:\"";
-      cmd += Entity.Block.name;
-      cmd += '"';
-      
-      if (e.Block.isTag)
-        cmd += ",blockTag:1b";
+    if (!e.BaseEntity.empty()) {
+        cmd += ",base_entity:\"";
+        cmd += Entity.BaseEntity;
+        cmd += '"';
     }
 
-    if (!e.Dimension.name.empty()) {
-      cmd += ",dimension:\"";
-      cmd += Entity.Dimension.name;
-      cmd += '"';
 
-      if (e.Dimension.isTag)
-        cmd += ",dimensionTag:1b";
-    }
+    if (e.hasRequirements) {
+        cmd += ",requirements:{";
 
-    if (!e.Biomes.empty()) {
-        cmd += ",biomes:[";
-        int result = 0;
-        //for (auto& biome : e.Biomes) {
-        //    result = 0;
-        //    int i = 0;
-        //    for (auto c : biome) {
-        //        result += c + i++;
-        //    }
-        //    cmd += std::to_string(result) + ",";
-        //}
-        for (const auto& biome : e.Biomes) {
+        if (e.Level) {
+            cmd += ",level:{";
+            if (e.Level.min) {
+                cmd += ",min:";
+                cmd += std::to_string(e.Level.min);
+            }
+            if (e.Level.max) {
+                cmd += ",max:";
+                cmd += std::to_string(e.Level.max);
+            }
+            cmd += "}";
+        }
+        if (e.MoonPhase) {
+            cmd += ",moon_phase:{";
+            if (e.MoonPhase.exact) {
+                cmd += ",exact:";
+                cmd += std::to_string(e.MoonPhase.exact);
+                cmd += "b,";
+            }
+            else {
+                if (e.MoonPhase.min) {
+                    cmd += ",min:";
+                    cmd += std::to_string(e.MoonPhase.min);
+                    cmd += "b,";
+                }
+
+                if (e.MoonPhase.max) {
+                    cmd += ",max:";
+                    cmd += std::to_string(e.MoonPhase.max);
+                    cmd += "b";
+                }
+
+                if (e.MoonPhase.except) {
+                    cmd += ",except:";
+                    cmd += std::to_string(e.MoonPhase.except);
+                    cmd += "b";
+                }
+
+                if (e.MoonPhase.on_even_days) {
+                    cmd += ",on_even_days:1b";
+                }
+
+                if (e.MoonPhase.on_odd_days) {
+                    cmd += ",on_odd_days:1b";
+                }
+
+                if (e.MoonPhase.on_prime_days) {
+                    cmd += ",on_prime_days:1b";
+                }
+
+                if (e.MoonPhase.blood_moon) {
+                    cmd += ",blood_moon:1b";
+                }
+            }
+            cmd += "}";
+        }
+
+        if (!e.Block.name.empty()) {
+            cmd += ",block:\"";
+            cmd += Entity.Block.name;
             cmd += '"';
-            cmd += biome;
-            cmd += "\",";
+
+            if (e.Block.isTag)
+                cmd += ",blockTag:1b";
         }
-        cmd += "],biomes_search_key:1b";
+
+        if (!e.Dimension.name.empty()) {
+            cmd += ",dimension:\"";
+            cmd += Entity.Dimension.name;
+            cmd += '"';
+
+            if (e.Dimension.isTag)
+                cmd += ",dimensionTag:1b";
+        }
+
+        if (!e.Biomes.empty()) {
+            cmd += ",biomes:[";
+            for (const auto& biome : e.Biomes) {
+                cmd += "\""s + biome + "\",";
+            }
+
+            //return result;
+            //for (auto biome : e.Biomes) {
+            //    cmd += '"';
+            //    cmd += biome;
+            //    cmd += "\",";
+            //}
+            cmd += "],biomes_search_key:1b";
+        }
+
+        if (e.Weather) {
+            cmd += ",weather:{";
+            if (!e.Weather.raining.empty()) {
+                cmd += ",";
+                cmd += Entity.Weather.raining;
+            }
+            if (!e.Weather.thundering.empty()) {
+                cmd += ",";
+                cmd += Entity.Weather.thundering;
+            }
+            cmd += '}';
+        }
+
+        cmd += "}";
     }
 
-    if (e.Weather) {
-      cmd += ",weather:{";
-      if (!e.Weather.raining.empty()) {
-        cmd += ",";
-        cmd += Entity.Weather.raining;
-      }
-      if (!e.Weather.thundering.empty()) {
-        cmd += ",";
-        cmd += Entity.Weather.thundering;
-      }
-      cmd += '}';
+    if (e.StatIncreases) {
+        cmd += ",stat_increases:{";
+        if (e.StatIncreases.hasFlatStats()) {
+            cmd += ",flat:{";
+            stat_increases& es = e.StatIncreases;
+            if (es.F_Armor)
+                cmd += es.F_Armor.toString(",armor");
+
+            if (es.F_ArmorToughness)
+                cmd += es.F_ArmorToughness.toString(",armor_toughness");
+
+            if (es.F_Attack_Speed)
+                cmd += es.F_Attack_Speed.toString(",attack_speed");
+
+            if (es.F_Damage)
+                cmd += es.F_Damage.toString(",damage");
+
+            if (es.F_FollowRange)
+                cmd += es.F_FollowRange.toString(",follow_range");
+
+            if (es.F_Health)
+                cmd += es.F_Health.toString(",health");
+
+            if (es.F_KnockBack)
+                cmd += es.F_KnockBack.toString(",knockback_resistance");
+
+            if (es.F_Speed)
+                cmd += es.F_Speed.toString(",speed");
+
+            cmd += "}";
+        }
+
+        if (e.StatIncreases.hasPercentageStats()) {
+            cmd += ",percentage:{";
+            stat_increases& es = e.StatIncreases;
+            if (es.P_Armor)
+                cmd += es.P_Armor.toString(",armor");
+            if (es.P_ArmorToughness)
+                cmd += es.P_ArmorToughness.toString(",armor_toughness");
+            if (es.P_Attack_Speed)
+                cmd += es.P_Attack_Speed.toString(",attack_speed");
+            if (es.P_Damage)
+                cmd += es.P_Damage.toString(",damage");
+            if (es.P_FollowRange)
+                cmd += es.P_FollowRange.toString(",follow_range");
+            if (es.P_Health)
+                cmd += es.P_Health.toString(",health");
+            if (es.P_KnockBack)
+                cmd += es.P_KnockBack.toString(",knockback_resistance");
+            if (es.P_Speed)
+                cmd += es.P_Speed.toString(",speed");
+            cmd += "}";
+        }
+
+        cmd += "}";
+    }
+    if (!e.SummonFuncion.empty()) {
+        cmd += ",summon_function:\"";
+        cmd += e.SummonFuncion;
+        cmd += "\"";
     }
 
+    if (!e.NBT.empty() && e.NBT != "{}") {
+        cmd += ",entity_data:";
+        cmd += e.NBT;
+    }
     cmd += "}";
-  }
 
-  if (e.StatIncreases) {
-    cmd += ",stat_increases:{";
-    if (e.StatIncreases.hasFlatStats()) {
-      cmd += ",flat:{";
-      stat_increases& es = e.StatIncreases;
-      if (es.F_Armor)
-        cmd += es.F_Armor.toString(",armor");
-      
-      if (es.F_ArmorToughness)
-        cmd += es.F_ArmorToughness.toString(",armor_toughness");
 
-      if (es.F_Attack_Speed)
-        cmd += es.F_Attack_Speed.toString(",attack_speed");
-      
-      if (es.F_Damage)
-        cmd += es.F_Damage.toString(",damage");
-      
-      if (es.F_FollowRange)
-        cmd += es.F_FollowRange.toString(",follow_range");
-      
-      if (es.F_Health)
-        cmd += es.F_Health.toString(",health");
-      
-      if (es.F_KnockBack)
-        cmd += es.F_KnockBack.toString(",knockback_resistance");
-
-      if (es.F_Speed)
-        cmd += es.F_Speed.toString(",speed");
-
-      cmd += "}";
+    if (cmd.find(",requirements:{}") != string::npos) {
+        cmd.erase(cmd.find(",requirements:{}"), 16);
     }
-    
-    if (e.StatIncreases.hasPercentageStats()) {
-      cmd += ",percentage:{";
-      stat_increases& es = e.StatIncreases;
-      if (es.P_Armor)
-        cmd += es.P_Armor.toString(",armor");
-
-      if (es.P_ArmorToughness)
-        cmd += es.P_ArmorToughness.toString(",armor_toughness");
-
-      if (es.P_Attack_Speed)
-        cmd += es.P_Attack_Speed.toString(",attack_speed");
-
-      if (es.P_Damage)
-        cmd += es.P_Damage.toString(",damage");
-
-      if (es.P_FollowRange)
-        cmd += es.P_FollowRange.toString(",follow_range");
-
-      if (es.P_Health)
-        cmd += es.P_Health.toString(",health");
-
-      if (es.P_KnockBack)
-        cmd += es.P_KnockBack.toString(",knockback_resistance");
-
-      if (es.P_Speed)
-        cmd += es.P_Speed.toString(",speed");
-
-      cmd += "}";
+    while (cmd.find(",}") != string::npos) {
+        size_t pos = cmd.find(",}");
+        cmd.erase(pos, 1);
     }
 
-    cmd += "}";
-  }
-  if (!e.SummonFuncion.empty()) {
-    cmd += ",summon_function:\"";
-    cmd += e.SummonFuncion;
-    cmd += "\"";
-  }
+    while (cmd.find("{,") != string::npos) {
+        size_t pos = cmd.find("{,");
+        cmd.erase(pos + 1, 1);
+    }
 
-  if (!e.NBT.empty() && e.NBT != "{}") {
-    cmd += ",entity_data:";
-    cmd += e.NBT;
-  }
-  cmd += "}";
-  
-  
-  if (cmd.find(",requirements:{}") != string::npos) {
-    cmd.erase(cmd.find(",requirements:{}"), 16);
-  }
-  while (cmd.find(",}") != string::npos) {
-    size_t pos = cmd.find(",}");
-    cmd.erase(pos,1);
-  }
+    while (cmd.find(",]") != string::npos) {
+        size_t pos = cmd.find(",]");
+        cmd.erase(pos, 1);
+    }
 
-  while (cmd.find("{,") != string::npos) {
-    size_t pos = cmd.find("{,");
-    cmd.erase(pos+1, 1);
-  }
+    while (cmd.find("[,") != string::npos) {
+        size_t pos = cmd.find("[,");
+        cmd.erase(pos + 1, 1);
+    }
 
-  while (cmd.find(",]") != string::npos) {
-      size_t pos = cmd.find(",]");
-      cmd.erase(pos, 1);
-  }
-
-  while (cmd.find("[,") != string::npos) {
-      size_t pos = cmd.find("[,");
-      cmd.erase(pos + 1, 1);
-  }
-  cout << cmd;
+    std::cout << cmd;
 }
 int Generator::registry()
 {
@@ -569,10 +556,10 @@ int Generator::moonPhase(MoonPhaseBranches branch)
   {
     print_colored_reset("\nExact: ", ConsoleColorAttributes::Cyan_FG);
     getInput();
-    if (input.empty())
-      Entity.MoonPhase.exact = 0;
-    else if (to_number(input) > 8 || to_number(input) < 1)
-    {
+    if (input.empty()) {
+        Entity.MoonPhase.exact = 0;
+    }
+    else if (to_number(input) > 8 || to_number(input) < 1) {
       THROW_ERROR("\n[!ERROR!] The exact cannot be more than 8 or less than 1!",
         moonPhase(MoonPhaseBranches::EXACT));
     }
@@ -594,7 +581,6 @@ int Generator::moonPhase(MoonPhaseBranches branch)
       THROW_ERROR("\n[!ERROR!] The min cannot be more than 8 or less than 1!",
         moonPhase(MoonPhaseBranches::MIN));
     }
-
     else {
       Entity.MoonPhase.min = to_number(input);
     }
@@ -641,9 +627,7 @@ int Generator::moonPhase(MoonPhaseBranches branch)
       {
         THROW_ERROR("\n[!ERROR!] The except cannot be more than 8 or less than 1!", moonPhase(MoonPhaseBranches::EXCEPT));
       }
-      else {
-        Entity.MoonPhase.except = to_number(input);
-      }
+      Entity.MoonPhase.except = to_number(input);
     }
   }
 
@@ -804,15 +788,15 @@ int Generator::biome()
           locateBiomeTag(word);
       }
       else {
-          Entity.Biomes.insert(std::string("\"") + word + "\"");
+          Entity.Biomes.insert(word);
       }
   }
-  for (auto& biome : Entity.Biomes) {
+  for (const auto& biome : Entity.Biomes) {
       //std::cout << biome.substr(1, 9);
       if (biome.find("minecraft:") != string::npos) {
-          if (!isValidBiome(biome.substr(biome.find("minecraft:") + 10))) {
+          if (!isValidBiome(biome)) {
               cnsl::print_colored_reset("\n[!ERROR!] --> ", ConsoleColorAttributes::Red_FG);
-              cnsl::print_colored_reset((biome.substr(biome.find("minecraft:") + 10,biome.length()-11)), ConsoleColorAttributes::Blue_FG);
+              cnsl::print_colored_reset(biome, ConsoleColorAttributes::Blue_FG);
               cnsl::print_colored_reset(" <-- Is not a valid biome.", ConsoleColorAttributes::Red_FG);
 
               Entity.Biomes.clear();
@@ -820,7 +804,6 @@ int Generator::biome()
               return -1;
           }
       }
-      //std::cout << "\n" << biome;
   }
   return 0;
 }
@@ -1117,16 +1100,16 @@ static std::unordered_set<std::string> alreadySearched;
 int Generator::locateBiomeTag(string& word) {
     word.erase(0, 1);
     //std::filesystem::path path = "src\\biome_tags";
-    std::string path = R"(biome_tags)";
+    std::string path = R"(./biome_tags)";
     while (word.find(":") != string::npos) {
         size_t pos = word.find(":");
         word[pos] = '\\';
     }
 
-    std::string filePath = (path + "\\" + word + ".json");
+    std::string filePath = (std::string("./biome_tags\\") + word + ".json");
     //filePath 
-    //std::ifstream ifile(filePath.c_str());
-    std::ifstream ifile("./biome_tags\\minecraft\\all.json");
+    std::ifstream ifile(filePath.c_str());
+    //std::ifstream ifile("./biome_tags\\minecraft\\all.json");
     if (ifile) {
         std::string str = "";
 
@@ -1154,12 +1137,8 @@ int Generator::locateBiomeTag(string& word) {
 
         while (str.find("false}") != string::npos)
             str.erase(str.find("false}"), 6);
-        
-        //std::cout << str;
         /*
-        MOST CURSED WAY TO READ JSON FILE
-        LOL TOO LAZY TO INSTALL A LIB
-
+            MOST CURSED WAY TO READ JSON FILE
         */
         size_t valuesPos = str.find("{values:[");
         std::string keyword = "";
@@ -1174,7 +1153,7 @@ int Generator::locateBiomeTag(string& word) {
                     Entity.Biomes.insert(keyword);
                 }
                 keyword = "";
-                
+
             }
             else {
                 keyword += character;
@@ -1182,7 +1161,7 @@ int Generator::locateBiomeTag(string& word) {
         }
     }
     else {
-        THROW_ERROR(std::string("\n[!ERROR!] ") + filePath + " file does not exist or mistyped file path", Generator::biome());
+        THROW_ERROR(std::string("\n[!ERROR!] ") + filePath + " file does not exist or mistyped file path \n                [!BE SURE THE EXE IS IN THE SAME FILE!]", Generator::biome());
     }
     ifile.close();
     return 0;

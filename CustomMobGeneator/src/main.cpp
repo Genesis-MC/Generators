@@ -3,7 +3,7 @@
 #define _WIN32 1
 
 #include "headers/generator.hpp"
-#include "headers/cnsl.h"
+#include "headers/cnsl.hpp"
 #include <string>
 // took me a while to search why doesnt work just to forget i have to include ()
 const char* HowToUse = R"(

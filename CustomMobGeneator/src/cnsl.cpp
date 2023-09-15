@@ -1,4 +1,4 @@
-#include "headers/cnsl.h"
+#include "headers/cnsl.hpp"
 #if _WIN32 == true
 inline HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 namespace cnsl {
