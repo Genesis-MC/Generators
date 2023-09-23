@@ -876,7 +876,7 @@ int Generator::NBT()
   {
       THROW_ERROR("\n[!ERROR!] Each Entity must atleast some NBT!", NBT());
   }
-  if (input[0] != '{' && input[input.length() - 1] != '}' )
+  if (input.front() != '{' || input.back() != '}' )
   {
     THROW_ERROR("\n[!ERROR!] The NBT must be in brackets!", NBT());
   }
@@ -1161,7 +1161,7 @@ int Generator::locateBiomeTag(string& word) {
         }
     }
     else {
-        THROW_ERROR(std::string("\n[!ERROR!] ") + filePath + " file does not exist or mistyped file path \n                [!BE SURE THE EXE IS IN THE SAME FILE!]", Generator::biome());
+        THROW_ERROR(std::string("\n[!ERROR!] ") + filePath + " file does not exist or mistyped file path \n                [!BE SURE THE EXE IS IN THE SAME FOLDER AS THE \"biome_tags\" folder!]", Generator::biome());
     }
     ifile.close();
     return 0;
