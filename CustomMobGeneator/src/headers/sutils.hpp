@@ -46,7 +46,7 @@ namespace sutils {
 	}
 
 	inline std::string lowercase(std::string input) {
-		for (auto c : input) {
+		for (auto& c : input) {
 			if (c >= 'A' && c <= 'Z')
 				c += 32;
 		}
@@ -54,7 +54,7 @@ namespace sutils {
 	}
 
 	inline std::string uppercase(std::string input) {
-		for (auto c : input) {
+		for (auto& c : input) {
 			if (c >= 'a' && c <= 'z')
 				c -= 32;
 		}
