@@ -190,6 +190,10 @@ class GenesisGearGenerator
             output = output.substring(0,output.length()-1);
         output += "]}','{\\\"translate\\\":\\\"\\\"}']}";
 
+        //UNBREAKABLE
+        if(tung>1)
+            output += ",Unbreakable:1b";
+
         //TEXTURES
         System.out.print("\nCustom Model Data (If not applicable, input 0; Else input last 3 values: 982---): ");
         CustomModelData = scanner.nextLine();
