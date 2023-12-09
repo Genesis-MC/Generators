@@ -73,7 +73,7 @@ class GenesisGearGenerator
 
         //STATS
         int[] stats = new int[13];
-        String[] statVal = {"physical_power","magic_power","attack_speed","health","armor","armor_toughness","knockback_resistance","mana_pool","mana_regen","speed","luck","artifact_power","ability_haste"};
+        String[] statVal = {"physical_power","magic_power","attack_speed","health","armor","armor_toughness","knockback_resistance","mana_pool","mana_regen","speed","luck","relic_power","ability_haste"};
 
         //TUNGSTEN ITEM UUID
         int tung;
@@ -122,7 +122,7 @@ class GenesisGearGenerator
         stats[9] = scanner.nextInt();
         System.out.print("Luck: ");
         stats[10] = scanner.nextInt();
-        System.out.print("artifact Power: ");
+        System.out.print("Relic Power: ");
         stats[11] = scanner.nextInt();
         System.out.print("Ability Haste: ");
         stats[12] = scanner.nextInt();
