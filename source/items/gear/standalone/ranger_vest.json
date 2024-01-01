@@ -1,0 +1,30 @@
+{
+    "id": "gen:ranger_vest",
+    "base_item": "minecraft:leather_chestplate",
+    "stats": {
+      "armor": 60,
+      "speed": 15
+    },
+    "nbt": "{display:{color:4085589},Unbreakable:1b}",
+    "type": "chestplate",
+    "rarity": 0,
+    "name": "Hunter's Vest",
+    "recipes": [
+      {
+        "type": "heavy_workbench_shaped",
+        "pattern": [
+          "---",
+          "-x-",
+          "---"
+        ],
+        "legend": {
+          "-": {
+            "id": "gen:boar_hide"
+          },
+          "x": {
+            "id": "gen:hunter_vest"
+          }
+        }
+      }
+    ]
+}

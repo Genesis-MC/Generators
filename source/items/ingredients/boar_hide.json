@@ -1,0 +1,11 @@
+{
+    "id": "gen:boar_hide",
+    "base_item": "minecraft:leather",
+    "cmd": 982001,
+    "type": "ingredient",
+    "rarity": 0,
+    "name": "Boar Hide",
+    "lore": [
+      "It has a course and tough texture, great for navigating through rough terrain."
+    ]
+}

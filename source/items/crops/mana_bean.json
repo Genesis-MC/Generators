@@ -1,0 +1,8 @@
+{
+    "id": "gen:mana_bean",
+    "base_item": "minecraft:tropical_fish",
+    "cmd": 982004,
+    "type": "ingredient",
+    "rarity": 1,
+    "name": "Mana Bean"
+}

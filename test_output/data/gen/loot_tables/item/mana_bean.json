@@ -1,0 +1,46 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tropical_fish",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{gen:{id:\"gen:mana_bean\"},CustomModelData:982004}"
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "item.gen.mana_bean",
+                "italic": false
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "lore": [
+                {
+                  "translate": "genesis.lore.rarity.1",
+                  "italic": false,
+                  "color": "aqua",
+                  "with": [
+                    {
+                      "text": "A",
+                      "font": "genesis:icon",
+                      "color": "white"
+                    },
+                    {
+                      "translate": "genesis.lore.type.ingredient"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

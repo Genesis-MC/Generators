@@ -1,0 +1,14 @@
+{
+    "id": "gen:ancient_gold_coin",
+    "base_item": "minecraft:gold_nugget",
+    "cmd": 982001,
+    "type": "ingredient",
+    "rarity": 2,
+    "name": "Ancient Gold Coin",
+    "name_style": {
+      "color": "gold"
+    },
+    "lore": [
+      "A worn gold coin that looks like it belongs to an ancient treasure."
+    ]
+}

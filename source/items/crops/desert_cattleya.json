@@ -1,0 +1,8 @@
+{
+    "id": "gen:desert_cattleya",
+    "base_item": "minecraft:jigsaw",
+    "cmd": 982002,
+    "type": "ingredient",
+    "rarity": 3,
+    "name": "Desert Cattleya"
+}
