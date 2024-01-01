@@ -5,6 +5,9 @@
       "armor": 60,
       "speed": 15
     },
+    "abilities": [
+      "swiftblade"
+    ],
     "nbt": "{display:{color:4085589},Unbreakable:1b}",
     "type": "chestplate",
     "rarity": 0,

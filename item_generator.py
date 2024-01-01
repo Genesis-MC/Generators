@@ -54,6 +54,28 @@ class NbtTag:
 
 
 
+class GearAbility:
+    def __init__(self, obj, id):
+        assert obj['type'] in ["passive"], f"Invalid ability type in '{id}': {obj['type']}"
+
+        self.type = obj['type']
+        self.id = id
+        self.name = obj['name']
+        self.description = obj['description']
+        self.lore = [{'text':self.name, 'italic':False,'color':'gold'}, {'text':self.type.capitalize()+' Ability', 'italic':False,'color':'dark_gray'}] + split_text_component(self.description, default_style={'color':'gray'})
+
+
+
+def register_abilities(args):
+    global ABILITY_REGISTRY 
+    ABILITY_REGISTRY = dict()
+    for filename in glob.glob(os.path.join(os.path.join(args.source_dir, 'abilities', '**', '*.json')), recursive = True):
+        if args.verbose:
+            print(filename)
+        ability_id = os.path.splitext(os.path.basename(filename))[0]
+        with open(filename, 'r') as file:
+            ABILITY_REGISTRY[ability_id] = GearAbility(json.load(file), ability_id)
+
 
 
 def read_or_new_json(filename):
@@ -165,6 +187,9 @@ def generate_item_loot_table(conf):
         nbt.set('AttributeModifiers', [{'Amount':"@-0.000000000001d",'Name':f"tungsten.{slot}",'Operation':0,'UUID':"@[I;12,42069,0,{}]".format({'head':12,'chest':13,'legs':14,'feet':15}[slot]),'AttributeName':'minecraft:generic.luck','Name':f"tungsten.{slot}",'Slot':slot}])
         nbt.set('HideFlags', 255)
         lore = stats_to_lore(conf['stats']) + lore
+    if 'abilities' in conf:
+        for ability in conf['abilities']:
+            lore += ABILITY_REGISTRY[ability].lore
     
 
     entry = dict(
@@ -236,6 +261,8 @@ def generate_heavy_workbench_shaped_recipe(recipe, result):
 
 
 def main(args):
+    register_abilities(args)
+
     # read all config files
     confs = []
     for filename in glob.glob(os.path.join(os.path.join(args.source_dir, 'items', '**', '*.json')), recursive = True):
@@ -298,7 +325,7 @@ if __name__ == "__main__":
     args.source_dir = os.path.expanduser(args.source_dir)
 
     assert os.path.isfile(os.path.join(args.datapack_dir, 'pack.mcmeta')), f"Could not find pack.mcmeta in specified datapack directory."
-    assert os.path.isfile(os.path.join(args.resourcepack_dir, 'pack.mcmeta')), f"Could not find pack.mcmeta in specified datapack directory."
+    assert os.path.isfile(os.path.join(args.resourcepack_dir, 'pack.mcmeta')), f"Could not find pack.mcmeta in specified resourcepack directory."
     assert os.path.isdir(args.source_dir), f"Could not find specified source directory."
 
     main(args)
