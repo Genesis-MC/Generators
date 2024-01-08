@@ -162,13 +162,13 @@ def get_loot_tables():
                 loot_tables[f"gen:{filename[:-5]}"] = out
 
 if __name__ == "__main__":
-    get_loot_tables()
-    get_shaped_recipes()
-    for file in files.values():
-        print(json.dumps(file, indent=2))
-        print('---------------------------------')
-    # jsnstr = snbt_str_to_json_str(
-    #             "{gen:{name:\"shaded_dagger\",type:\"Dagger\",stat:{physical_power:40,attack_speed:100,speed:15}},AttributeModifiers:[{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.mainhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\"mainhand\"}],display:{Name:'{\"translate\":\"Shaded Dagger\",\"color\":\"dark_purple\",\"italic\":false,\"bold\":false,\"underlined\":false}',Lore:['[{\"translate\":\"A\",\"font\":\"genesis:icon\",\"color\":\"white\",\"italic\":false},{\"translate\":\"Rare Dagger\",\"font\":\"minecraft:default\",\"color\":\"yellow\",\"italic\":false}]','{\"translate\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[{\"translate\":\"genesis.stats.wrapper.physical_power.2\",\"with\":[40]},{\"translate\":\"genesis.stats.wrapper.attack_speed.3\",\"with\":[100]},{\"translate\":\"genesis.stats.wrapper.speed.2\",\"with\":[15]}]}','{\"translate\":\"\"}']},CustomModelData:982008,HideFlags:195}"
-    #         )
+    # get_loot_tables()
+    # get_shaped_recipes()
+    # for file in files.values():
+    #     print(json.dumps(file, indent=2))
+    #     print('---------------------------------')
+    jsnstr = snbt_str_to_json_str(
+                "{gen:{name:\"shaded_dagger\",type:\"Dagger\",stat:{physical_power:40,attack_speed:100,speed:15}},AttributeModifiers:[{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.mainhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\"mainhand\"}],display:{Name:'{\"translate\":\"Shaded Dagger\",\"color\":\"dark_purple\",\"italic\":false,\"bold\":false,\"underlined\":false}',Lore:['[{\"translate\":\"A\",\"font\":\"genesis:icon\",\"color\":\"white\",\"italic\":false},{\"translate\":\"Rare Dagger\",\"font\":\"minecraft:default\",\"color\":\"yellow\",\"italic\":false}]','{\"translate\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[{\"translate\":\"genesis.stats.wrapper.physical_power.2\",\"with\":[40]},{\"translate\":\"genesis.stats.wrapper.attack_speed.3\",\"with\":[100]},{\"translate\":\"genesis.stats.wrapper.speed.2\",\"with\":[15]}]}','{\"translate\":\"\"}']},CustomModelData:982008,HideFlags:195}"
+            )
     # print(jsnstr)
-    # json.dumps(hjson.loads(jsnstr), indent=2)
+    print(hjson.dumpsJSON(hjson.loads(jsnstr), indent=2))
