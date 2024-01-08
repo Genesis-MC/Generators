@@ -1,6 +1,7 @@
 import re
 import requests
 import json
+import hjson
 from PIL import Image
 import os
 
@@ -17,6 +18,22 @@ loot_tables: dict[str, dict[str, str | int | dict[str, str] | list[str]]] = {}
 # 
 # def to_pascal_case(string: str) -> str:
 #     return re.sub(r"(?:^|_)(.)", lambda m: ' ' + m.group(1).upper(), string).strip()
+
+def snbt_str_to_json_str(snbt: str) -> dict:
+    json = ""
+    pntr = 0
+    for next_str in re.finditer(r'(?<!\\)(\\{2})*(("(.*?(\\\n)?)+(?<!\\)(\\{2})*")|(\'(.*?(\\\n)?)+(?<!\\)(\\{2})*\'))', snbt): # find all strings to not check in them
+        non_str = snbt[pntr:next_str.start()]
+        non_str = re.sub(r'\[I;\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\]', r'"[I;\1,\2,\3,\4]"', non_str) # add quotes to uuid
+        non_str = re.sub(r'([\d.]+[bsfd])', r'"\1"', non_str) # add quotes to numbers
+        json += non_str
+        json += next_str.group()
+        pntr = next_str.end()
+    non_str = re.sub(r'\[I;\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\]', r'"[I;\1,\2,\3,\4]"', snbt[pntr:]) # add quotes to uuid
+    json += re.sub(r'([\d.]+[bsfd])', r'"\1"', snbt[pntr:]) # add quotes to numbers
+    return json
+
+
 
 def get_shaped_recipes():
     with open(f"{datapack_path}data/smithed.crafter/functions/v0.2.0/recipes/shaped.mcfunction", "r") as file:
@@ -150,3 +167,8 @@ if __name__ == "__main__":
     for file in files.values():
         print(json.dumps(file, indent=2))
         print('---------------------------------')
+    # jsnstr = snbt_str_to_json_str(
+    #             "{gen:{name:\"shaded_dagger\",type:\"Dagger\",stat:{physical_power:40,attack_speed:100,speed:15}},AttributeModifiers:[{AttributeName:\"minecraft:generic.luck\",Name:\"tungsten.mainhand\",Amount:-0.000000000001,Operation:0,UUID:[I;12,42069,-0,10],Slot:\"mainhand\"}],display:{Name:'{\"translate\":\"Shaded Dagger\",\"color\":\"dark_purple\",\"italic\":false,\"bold\":false,\"underlined\":false}',Lore:['[{\"translate\":\"A\",\"font\":\"genesis:icon\",\"color\":\"white\",\"italic\":false},{\"translate\":\"Rare Dagger\",\"font\":\"minecraft:default\",\"color\":\"yellow\",\"italic\":false}]','{\"translate\":\"\",\"font\":\"genesis:stats\",\"color\":\"white\",\"italic\":false,\"extra\":[{\"translate\":\"genesis.stats.wrapper.physical_power.2\",\"with\":[40]},{\"translate\":\"genesis.stats.wrapper.attack_speed.3\",\"with\":[100]},{\"translate\":\"genesis.stats.wrapper.speed.2\",\"with\":[15]}]}','{\"translate\":\"\"}']},CustomModelData:982008,HideFlags:195}"
+    #         )
+    # print(jsnstr)
+    # json.dumps(hjson.loads(jsnstr), indent=2)
