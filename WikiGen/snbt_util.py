@@ -139,6 +139,8 @@ class Compound:
     
     def parse(snbt: str) -> tuple:
         snbt = snbt[1:].strip()
+        if snbt.startswith('}'):
+            return Compound({}), snbt[1:].strip()
         value = {}
         while snbt:
             key, snbt = Key.parse(snbt)
@@ -151,6 +153,17 @@ class Compound:
                 return Compound(value), snbt[1:].strip()
             else:
                 raise ValueError("Invalid compound", snbt)
+
+    def get_path(self, path: str, default = None):
+        keys = path.split('.')
+        value = self.value
+        for key in keys:
+            if not isinstance(value, dict): return default
+            if key in value:
+                value = value[key].value
+            else:
+                return default
+        return value
 
     def __getitem__(self, key): return self.value[key]
     def __str__(self): return '{' + ', '.join([f'{key}: {value}' for key, value in self.value.items()]) + '}'
@@ -167,6 +180,8 @@ class List:
 
     def parse(snbt: str) -> tuple:
         snbt = snbt[1:].strip()
+        if snbt.startswith(']'):
+            return List([]), snbt[1:].strip()
         value = []
         while snbt:
             val, snbt = get_value(snbt)
