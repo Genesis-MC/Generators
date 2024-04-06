@@ -10,6 +10,7 @@ class Item:
     cmd: int
     base_id: str
     gen_id: str
+    loot_table: str
 
     hideflags: int
 
@@ -34,7 +35,7 @@ class Item:
     trim: dict
     attributes: list
 
-    def from_loot_table(loot_table) -> Union['Item', None]:
+    def from_loot_table(loot_table, mc_loot_table_path: str) -> Union['Item', None]:
         try:
             if loot_table["pools"][0]["rolls"] != 1: return
             if len(loot_table["pools"][0]["entries"]) != 1: return
@@ -69,8 +70,6 @@ class Item:
         is_dev_stone: bool = None
         count: int = None
 
-        a = []
-
         for function in functions:
             if function["function"].endswith("set_nbt"):
                 nbt = parse(function["tag"])
@@ -102,8 +101,6 @@ class Item:
                 lore = function["lore"]
             elif function["function"].endswith("set_count"):
                 count = function["count"]
-            else:
-                a.append(function["function"])
 
 
         if gen_id:
@@ -130,6 +127,7 @@ class Item:
                 saturation=saturation,
                 is_dev_stone=is_dev_stone,
                 count=count,
+                loot_table=mc_loot_table_path,
             )
     
     def to_json(self):
@@ -157,8 +155,9 @@ def get_all():
         for file in files:
             if file.endswith(".json"):
                 with open(os.path.join(root, file), encoding='utf-8') as f:
+                    mc_loot_table_path = "gen:" + os.path.join(root, file).replace('\\', '/').split("data/gen/loot_tables/")[1][:-5]
                     loot_table = json.load(f)
-                    if item := Item.from_loot_table(loot_table):
+                    if item := Item.from_loot_table(loot_table, mc_loot_table_path):
                         items.append(item)
     # with open("items.json", "w") as f:
     #     f.write(json.dumps([item.to_json() for item in items], default=lambda x: x.__str__(), indent=4))
