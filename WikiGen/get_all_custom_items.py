@@ -106,8 +106,7 @@ class Item:
                 a.append(function["function"])
 
 
-        if base_id and gen_id and cmd:
-            if len(a): print(a, gen_id)
+        if gen_id:
             return Item(
                 cmd=cmd,
                 base_id=base_id,
@@ -163,3 +162,4 @@ def get_all():
                         items.append(item)
     # with open("items.json", "w") as f:
     #     f.write(json.dumps([item.to_json() for item in items], default=lambda x: x.__str__(), indent=4))
+    # print(len(items))
