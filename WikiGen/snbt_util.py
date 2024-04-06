@@ -14,6 +14,7 @@ class UUID:
         if match is None: raise ValueError("Invalid uuid", snbt)
         return UUID(match.group(0).replace(' ','')), snbt[match.end():]
 
+    def to_primitive(self) -> str: return self.value
     def __str__(self): return self.value
     def __repr__(self): return self.__str__()
 
@@ -31,6 +32,7 @@ class Byte:
         if match is None: raise ValueError("Invalid byte", snbt)
         return Byte(int(match.group(1))), snbt[match.end():]
 
+    def to_primitive(self) -> str: return self.value
     def __str__(self): return f'{self.value}b'
     def __repr__(self): return self.__str__()
 
@@ -48,6 +50,7 @@ class Short:
         if match is None: raise ValueError("Invalid short", snbt)
         return Short(int(match.group(1))), snbt[match.end():]
 
+    def to_primitive(self) -> str: return self.value
     def __str__(self): return f'{self.value}s'
     def __repr__(self): return self.__str__()
 
@@ -65,6 +68,7 @@ class Int:
         if match is None: raise ValueError("Invalid int", snbt)
         return Int(int(match.group(1))), snbt[match.end():]
 
+    def to_primitive(self) -> str: return self.value
     def __str__(self): return f'{self.value}'
     def __repr__(self): return self.__str__()
 
@@ -82,6 +86,7 @@ class Double:
         if match is None: raise ValueError("Invalid double", snbt)
         return Double(float(match.group(1))), snbt[match.end():]
 
+    def to_primitive(self) -> str: return self.value
     def __str__(self): return f'{self.value}d'
     def __repr__(self): return self.__str__()
 
@@ -99,6 +104,7 @@ class Float:
         if match is None: raise ValueError("Invalid float", snbt)
         return Float(float(match.group(1))), snbt[match.end():]
     
+    def to_primitive(self) -> str: return self.value
     def __str__(self): return f'{self.value}'
     def __repr__(self): return self.__str__()
 
@@ -119,6 +125,7 @@ class String:
             raise ValueError("Invalid string", snbt)
         return String(match.group(1)), snbt[match.end():]
 
+    def to_primitive(self) -> str: return self.value
     def __str__(self): return self.value
     def __repr__(self): return self.__str__()
 
@@ -165,6 +172,7 @@ class Compound:
                 return default
         return value
 
+    def to_primitive(self) -> dict: return {key: value.to_primitive() for key, value in self.value.items()}
     def __getitem__(self, key): return self.value[key]
     def __str__(self): return '{' + ', '.join([f'{key}: {value}' for key, value in self.value.items()]) + '}'
     def __repr__(self): return self.__str__()
@@ -194,6 +202,7 @@ class List:
             else:
                 raise ValueError("Invalid list", snbt)
 
+    def to_primitive(self) -> dict: return [value.to_primitive() for value in self.value]
     def __getitem__(self, index): return self.value[index]
     def __str__(self): return '[' + ', '.join([str(value) for value in self.value]) + ']'
     def __repr__(self): return self.__str__()

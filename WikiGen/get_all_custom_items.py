@@ -3,7 +3,7 @@ import json
 import os
 from typing import Union
 from config import data_pack_path
-from snbt_util import parse
+from snbt_util import parse, String
 
 @dataclass
 class Item:
@@ -81,7 +81,11 @@ class Item:
                 enchantments = nbt.get_path("Enchantments", enchantments)
                 hideflags = nbt.get_path("HideFlags", hideflags)
                 name = nbt.get_path("display.Name", name)
+                if type(name) == str:
+                    name = parse(name).to_primitive()
                 lore = nbt.get_path("display.Lore", lore)
+                if type(lore) == list:
+                    lore = [parse(line).to_primitive() if type(line) == String else line for line in lore]
                 if nbt.get_path("genesis.phead.detect", 0) == 1:
                     custom_head_data = nbt.get_path("SkullOwner", custom_head_data)
                 is_mineral = nbt.get_path("gen.mineral", is_mineral) == 1
