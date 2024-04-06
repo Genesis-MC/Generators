@@ -147,7 +147,7 @@ def print_remaining_tags(nbt: dict, *tags) -> bool:
     return success
 
 
-def get_all():
+def get_all() -> list[Item]:
     items = []
     loot_table_path = data_pack_path + "data/gen/loot_tables/"
 
@@ -159,6 +159,11 @@ def get_all():
                     loot_table = json.load(f)
                     if item := Item.from_loot_table(loot_table, mc_loot_table_path):
                         items.append(item)
-    # with open("items.json", "w") as f:
-    #     f.write(json.dumps([item.to_json() for item in items], default=lambda x: x.__str__(), indent=4))
-    # print(len(items))
+    return items
+
+
+if __name__ == "__main__":
+    items = get_all()
+    with open("items.json", "w") as f:
+        f.write(json.dumps([item.to_json() for item in items], default=lambda x: x.__str__(), indent=4))
+    print(len(items))
