@@ -11,9 +11,14 @@ shapeless_function_path = data_pack_path + "data/smithed.crafter/functions/v0.2.
 class ShapedIngredient:
     base_id: str
     gen_id: str
+    item_tag: list
 
     def __str__(self) -> str:
-        return f'gen:{self.gen_id}' if self.gen_id else f'minecraft:{self.base_id}'
+        if self.gen_id:
+            return f'gen:{self.gen_id}'
+        if self.item_tag:
+            return self.item_tag[0].value
+        return f'minecraft:{self.base_id}'
 
 @dataclass
 class ShapedRecipe:
@@ -31,6 +36,7 @@ class ShapedRecipe:
 class ShapelessIngredient:
     base_id: str
     gen_id: str
+    item_tag: list
     count: int
 
     def to_dict(self) -> dict:
@@ -40,7 +46,11 @@ class ShapelessIngredient:
         }
 
     def __str__(self) -> str:
-        return f'gen:{self.gen_id}' if self.gen_id else f'minecraft:{self.base_id}'
+        if self.gen_id:
+            return f'gen:{self.gen_id}'
+        if self.item_tag:
+            return self.item_tag[0].value
+        return f'minecraft:{self.base_id}'
 
 @dataclass
 class ShapelessRecipe:
@@ -68,8 +78,9 @@ def get_all_shaped_recipes() -> list[ShapedRecipe]:
                 grid_row = []
                 for col in input_compound[row].value:
                     base_id = col.get_path("id")
+                    item_tag = col.get_path("item_tag")
                     gen_id = col.get_path("tag.gen.name")
-                    grid_row.append(ShapedIngredient(base_id, gen_id))
+                    grid_row.append(ShapedIngredient(base_id, gen_id, item_tag))
                 grid.append(grid_row)
 
             output_table = line.split(' ')[-1].strip()
@@ -90,8 +101,9 @@ def get_all_shapeless_recipes() -> list[ShapelessRecipe]:
             for inpt in input_compound["recipe"].value:
                 count = inpt.get_path("Count")
                 base_id = inpt.get_path("id")
+                item_tag = inpt.get_path("item_tag")
                 gen_id = inpt.get_path("tag.gen.name")
-                ingedients.append(ShapelessIngredient(base_id, gen_id, count))
+                ingedients.append(ShapelessIngredient(base_id, gen_id, item_tag, count))
 
             output_table = line.split(' ')[-1].strip()
             recipes.append(ShapelessRecipe(ingedients, output_table))
@@ -103,5 +115,7 @@ def get_all_recipes() -> list[ShapelessRecipe|ShapedRecipe]:
 
 
 if __name__ == '__main__':
-    print("ALL RECIPES :")
-    print(json.dumps([r.to_dict() for r in get_all_recipes()], indent=4))
+    # print("ALL RECIPES :")
+    # print(json.dumps([r.to_dict() for r in get_all_recipes()], indent=4))
+    with open("recipes.json", "w") as f:
+        f.write(json.dumps([r.to_dict() for r in get_all_recipes()], indent=4))
